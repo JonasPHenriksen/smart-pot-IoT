@@ -39,8 +39,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       
-      - name: Convert repository name to lowercase
-        run: echo "::set-env name=REPO_NAME::$(echo ${GITHUB_REPOSITORY#*/} | tr '[:upper:]' '[:lower:]')"
+      - name: Convert repository name to lowercase and save to environment file
+        run: |
+          echo "REPO_NAME=$(echo ${GITHUB_REPOSITORY#*/} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
       
       - name: Build Docker image
         run: |
