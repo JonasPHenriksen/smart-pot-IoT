@@ -1,6 +1,5 @@
 #include "tone.h"
 #include "includes.h"
-#include <util/delay.h>
 
 #define BUZ_BIT PA7
 #define BUZ_DDR DDRA
