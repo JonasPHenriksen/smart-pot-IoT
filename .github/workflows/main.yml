@@ -1,6 +1,9 @@
-name: PlatformIO Test
+name: PlatformIO Test and Push
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   test:
@@ -8,18 +11,41 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
       
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
         
-    - name: Install PlatformIO
-      run: |
-        pip install platformio
+      - name: Install PlatformIO
+        run: |
+          pip install platformio
       
-    - name: Build and test with PlatformIO
-      run: |
-        platformio test --environment native
+      - name: Build and test with PlatformIO
+        run: |
+          platformio test --environment native
+        
+  push_to_main:
+    name: Push to main branch
+    if: ${{ success() }}
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v2
+        with:
+          ref: main
+      
+      - name: Set Git user identity
+        run: |
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git config user.name "${{ github.actor }}"
+      
+      - name: Push changes to main
+        run: |
+          git add .
+          git commit -m "Tests passed, pushing changes to main"
+          git push origin main
