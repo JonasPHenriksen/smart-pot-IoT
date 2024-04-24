@@ -22,4 +22,4 @@ jobs:
       
     - name: Build and test with PlatformIO
       run: |
-        platformio test -e <YOUR_ENVIRONMENT_NAME>
+        platformio test --environment target_run
