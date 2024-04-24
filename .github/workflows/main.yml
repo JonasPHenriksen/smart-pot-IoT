@@ -1,0 +1,25 @@
+name: PlatformIO Test
+
+on: [push]
+
+jobs:
+  test:
+    name: Run PlatformIO tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+        
+    - name: Install PlatformIO
+      run: |
+        pip install platformio
+      
+    - name: Build and test with PlatformIO
+      run: |
+        platformio test --environment target_run
