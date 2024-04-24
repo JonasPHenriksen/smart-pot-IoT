@@ -53,7 +53,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: firmware
-          path: .pio/build/mega2560/firmware.hex
+          path: .pio/build/target_run/mega2560/firmware.hex
 
   upload_image:
     name: Upload firmware image
