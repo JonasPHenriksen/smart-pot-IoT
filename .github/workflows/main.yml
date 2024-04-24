@@ -65,6 +65,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: firmware
-          path: .pio/build/target_run/mega2560/firmware.hex
+          path: .pio/build/target_run/firmware.hex
 
       # Additional steps to upload the firmware image to a desired location
