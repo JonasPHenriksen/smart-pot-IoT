@@ -70,6 +70,7 @@ jobs:
           # Additional setup commands as needed
 
       - name: Build Executable
+        working-directory: artifact-builder/flash.bat
         run: |
           pyinstaller --onefile flash.bat
           # Add commands to package the files into an executable
