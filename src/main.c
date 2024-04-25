@@ -20,6 +20,8 @@ int main() {
   tone_init();
   wifi_init();
 
+  tone_play_mario();
+
   wifi_command_join_AP("YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
   tcp_listen("192.168.43.221", 23); // Listen for incoming messages
 
