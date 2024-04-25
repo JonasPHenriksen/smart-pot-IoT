@@ -72,7 +72,7 @@ jobs:
       - name: Build Executable
         working-directory: artifact-builder
         run: |
-          pyinstaller --onefile --add-binary "flash.bat;." --add-data "*;." flash.py
+          pyinstaller --onefile --add-binary "flash.bat;." --add-data "*;." 
           # Add commands to package the files into an executable
           # or use NSIS to create an installer
 
