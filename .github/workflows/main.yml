@@ -55,16 +55,28 @@ jobs:
           name: firmware
           path: .pio/build/target_run/firmware.hex
 
-  upload_image:
-    name: Upload firmware image
-    runs-on: ubuntu-latest
+  create_flash_exe:
+    name: Create and upload flash executable
+    runs-on: windows-latest
     needs: create_firmware_image
     
     steps:
-      - name: Download firmware image
-        uses: actions/download-artifact@v2
-        with:
-          name: firmware
-          path: .pio/build/target_run/firmware.hex
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-      # Additional steps to upload the firmware image to a desired location
+      - name: Install Dependencies
+        run: |
+          pip install pyinstaller
+          # Additional setup commands as needed
+
+      - name: Build Executable
+        run: |
+          pyinstaller --onefile flash.bat
+          # Add commands to package the files into an executable
+          # or use NSIS to create an installer
+
+      - name: Upload Executable
+        uses: actions/upload-artifact@v2
+        with:
+          name: flash-executable
+          path: dist/flash.exe  # Adjust the path to the generated executable
