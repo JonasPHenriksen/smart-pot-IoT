@@ -20,7 +20,7 @@ int main() {
   tone_init();
   wifi_init();
 
-  display_setValues(1,0,1,2);
+  display_setValues(1,2,3,4);
 
   wifi_command_join_AP("YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
   tcp_listen("192.168.43.221", 23); // Listen for incoming messages
