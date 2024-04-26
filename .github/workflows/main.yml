@@ -26,7 +26,6 @@ jobs:
       - name: Build and test with PlatformIO
         run: |
           platformio test --environment native
-
   create_firmware_image:
     name: Create firmware image
     runs-on: ubuntu-latest
@@ -55,29 +54,14 @@ jobs:
           name: firmware
           path: .pio/build/target_run/firmware.hex
 
-  create_flash_exe:
-    name: Create and upload flash executable
-    runs-on: windows-latest
+  upload_image:
+    name: Upload firmware image
+    runs-on: ubuntu-latest
     needs: create_firmware_image
     
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Install Dependencies
-        run: |
-          pip install pyinstaller
-          # Additional setup commands as needed
-
-      - name: Build Executable
-        working-directory: artifact-builder
-        run: |
-          pyinstaller --onefile --add-binary "flash.bat;." --add-data "*;." 
-          # Add commands to package the files into an executable
-          # or use NSIS to create an installer
-
-      - name: Upload Executable
-        uses: actions/upload-artifact@v2
+      - name: Download firmware image
+        uses: actions/download-artifact@v2
         with:
-          name: flash-executable
-          path: dist/flash.exe  # Adjust the path to the generated executable
+          name: firmware
+          path: .pio/build/target_run/firmware.hex
