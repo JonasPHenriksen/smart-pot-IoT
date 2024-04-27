@@ -53,7 +53,7 @@ jobs:
         with:
           name: firmware
           path: |
-            .pio/build/target_run/firmware.hex
+            .pio/build/*/firmware.hex
             lib/
             test/
             platformio.ini
