@@ -47,13 +47,18 @@ jobs:
       - name: Create firmware image
         run: |
           platformio run --environment target_run
-          
-      - name: Archive firmware image
+
+      - name: Upload firmware image
         uses: actions/upload-artifact@v2
         with:
           name: firmware
+          path: .pio/build/target_run/firmware.hex
+          
+      - name: Upload test env
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-env
           path: |
-            .pio/build/*/firmware.hex
             lib/
             test/
             platformio.ini
