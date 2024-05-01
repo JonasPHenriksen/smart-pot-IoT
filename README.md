@@ -46,3 +46,6 @@ This driver facilitates UART (Universal Asynchronous Receiver-Transmitter) commu
 
 ### 15. wifi.h
 This driver interfaces with the ESP8266 module, a Wi-Fi microchip with full TCP/IP stack and microcontroller capability. With this driver, you can connect to an Access Point (AP) and establish a TCP connection, and send and receive data through the TCP-connection.
+
+### 16. moisture.h
+This driver reads a value form the moisture sensor on the breadbord.
