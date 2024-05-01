@@ -114,7 +114,7 @@ def run_tests():
 # Provide GitHub repository information to retrieve workflow ID
 owner = "JonasPHenriksen"
 repo = "IoTCICDTest"
-token = "INSERT_GITHUB_TOKEN"
+token = "SU5TRVJUX0dJVEhVQl9UT0tFTg==" 
 
 # Set the baud rate (115200 for Arduino Mega 2560)
 BAUD_RATE = "115200"
