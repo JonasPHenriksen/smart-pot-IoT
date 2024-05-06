@@ -5,9 +5,9 @@
 #include <stdint.h>
 
 // Function to write data to EEPROM /
-void EEPROM_write(uint8_t uiAddress, unsigned char ucData);
+void EEPROM_write(uint8_t uiAddress, uint8_t ucData);
 
 // Function to read data from EEPROM /
-unsigned char EEPROM_read(unsigned int uiAddress);
+uint8_t EEPROM_read(uint8_t uiAddress);
 
 #endif // EEPROM_H 

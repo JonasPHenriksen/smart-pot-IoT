@@ -25,3 +25,5 @@ void setWaterAmount(uint32_t waterAmount);
 void setMoistLevel(uint8_t moist);
 uint32_t tryWater();
 bool playBuzzer(song_enum_t song);
+uint8_t getMoisture();
+uint8_t getWaterLevel();
