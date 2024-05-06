@@ -1,6 +1,6 @@
 #include "smart_pot.h"
 
-static uint8_t waterAmount;
+static uint32_t waterAmount;
 static uint8_t moistLevel;
 
 void smartPotInit() {
@@ -12,16 +12,17 @@ void smartPotInit() {
   pump_init();
 }
 
-void setWaterAmount(int water) {
+void setWaterAmount(uint32_t water) {
   waterAmount = water;
 }
 
-void setMoistLevel(int moist) {
+void setMoistLevel(uint8_t moist) {
   moistLevel = moist;
 }
 
-int tryWater() {
-  if (getMoisture() < moistLevel) {
+uint32_t tryWater() {
+  uint8_t moisture = getMoisture();
+  if (moisture < moistLevel) {
     pump_run(waterAmount);
   } else {
     return NULL;
@@ -29,10 +30,10 @@ int tryWater() {
   return waterAmount;
 }
 
-int getWaterLevel() {
+uint8_t getWaterLevel() {
 
 }
-int getMoisture() {
+uint8_t getMoisture() {
   uint16_t moisture = moisture_read();
   uint8_t moisture_percentage = (1 - ((float)moisture / 1023.0)) * 100;
   return moisture_percentage;

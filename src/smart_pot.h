@@ -21,7 +21,7 @@ typedef enum {
 } song_enum_t;
 
 void smartPotInit();
-void setWaterAmount(int waterAmount);
-void setMoistLevel(int moist);
-int tryWater();
+void setWaterAmount(uint32_t waterAmount);
+void setMoistLevel(uint8_t moist);
+uint32_t tryWater();
 bool playBuzzer(song_enum_t song);
