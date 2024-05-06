@@ -31,7 +31,12 @@ uint32_t tryWater() {
 }
 
 uint8_t getWaterLevel() {
+  // 30 + 50 mm
 
+  uint8_t waterLevel = hc_sr04_takeMeasurement() - 30;
+  uint8_t waterLevelPercentage = waterLevel / 50 * 100;
+
+  return waterLevelPercentage;
 }
 uint8_t getMoisture() {
   uint16_t moisture = moisture_read();
