@@ -9,15 +9,15 @@
 
 // variables used in moisture.c
 uint8_t ADMUX;
-uint8_t ADCSRA;
+/*uint8_t ADCSRA;
 uint8_t ADCSRB;
 uint8_t ADCL;
 uint8_t ADCH;
 uint8_t DIDR2;
 uint8_t PORTK;
-uint8_t DDRK;
+uint8_t DDRK;*/
 
-DEFINE_FFF_GLOBALS
+//DEFINE_FFF_GLOBALS
 
 void setUp(void)
 {
