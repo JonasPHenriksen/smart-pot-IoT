@@ -40,13 +40,18 @@ int getMoisture() {
 bool playBuzzer(song_enum_t song) {
   switch (song) {
     case SONG_LOW_WATER_LEVEL:
-      tone_play_mario();
+      tone_play(600, 150);
+      tone_play(400, 150);
+      
       break;
     case SONG_WATERING:
-      tone_play_starwars();
+      tone_play(650, 150);
+      tone_play(800, 150);
       break;
     case SONG_MOISTURE:
-      tone_play_mario();
+      tone_play(400, 150);
+      tone_play(0, 150);
+      tone_play(400, 150);
       break;
     case SONG_ERROR:
       tone_play(200, 150);
