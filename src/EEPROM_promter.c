@@ -1,7 +1,7 @@
 #include <avr/io.h>
 #include <EEPROM_promter.h>
 
-void EEPROM_write(uint8_t uiAddress, unsigned char ucData) {
+void EEPROM_write(uint8_t uiAddress, uint8_t ucData) {
   // Wait for completion of previous write /
   while(EECR & (1<<EEPE))
   ;
@@ -15,7 +15,7 @@ void EEPROM_write(uint8_t uiAddress, unsigned char ucData) {
   EECR |= (1<<EEPE);
 }
 
-unsigned char EEPROM_read(unsigned int uiAddress) {
+uint8_t EEPROM_read(uint8_t uiAddress) {
   // Wait for completion of previous write /
   while(EECR & (1<<EEPE))
   ;
