@@ -1,6 +1,9 @@
 name: PlatformIO Test and Release
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
