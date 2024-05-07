@@ -55,15 +55,20 @@ uint16_t hc_sr04_takeMeasurement()
 //    TCCR1B &= ~(1 << CS10);
    
 TCNT1 = 0;
+uint32_t timeout_counter = 0;
+
     while (!(PIN_Echo & (1 << P_Echo)))
     {
-
                 // Check for timer overflow (24 ms)
         if (TCNT1 >= (F_CPU / 256) * 0.1) //timeout after 100ms. Chip is not working
         {
             // Timer overflowed, return 0
             return 0;
         }
+        if (++timeout_counter > 100) {
+        break;
+    }
+        
     }
          // Wait for signal to begin /TODO implement some timeout...
 
