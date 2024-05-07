@@ -1,8 +1,6 @@
 #include "../test/fff.h"
 #include "unity.h"
-
 #include "moisture.h"
-
 #include <stdio.h>
 #include <stdint.h>
 
@@ -16,9 +14,6 @@ uint8_t PORTK;
 uint8_t DDRK;
 
 DEFINE_FFF_GLOBALS
-
-// Declare the function pointer for the mocked analogRead function
-FAKE_VALUE_FUNC(uint8_t, fake_moisture_read);
 
 
 void setUp(void)
@@ -40,7 +35,7 @@ void test_correct_moisture_driver_initialization()
     TEST_ASSERT_EQUAL(65, ADMUX);
 }
 
-void test_moisture_driver_read_wet()
+void test_moisture_driver_read()
 {
     // Perform any setup necessary for the test case
     uint8_t moistureLevel = moisture_read();
@@ -57,7 +52,7 @@ int main(void)
 
     // Run the tests
     RUN_TEST(test_correct_moisture_driver_initialization);
-    RUN_TEST(test_moisture_driver_read_wet);
+    RUN_TEST(test_moisture_driver_read);
 
     // End the tests
     return UNITY_END();

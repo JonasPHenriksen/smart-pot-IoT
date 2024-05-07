@@ -1,0 +1,78 @@
+void testChanges() {
+    char message_ADMUX[1024];
+sprintf(message_ADMUX, "INFO! ADMUX value. %u       :1:_:PASS\n", ADMUX);
+TEST_MESSAGE(message_ADMUX);
+
+char message_ADCSRA[1024];
+sprintf(message_ADCSRA, "INFO! ADCSRA value. %u       :1:_:PASS\n", ADCSRA);
+TEST_MESSAGE(message_ADCSRA);
+
+char message_ADCSRB[1024];
+sprintf(message_ADCSRB, "INFO! ADCSRB value. %u       :1:_:PASS\n", ADCSRB);
+TEST_MESSAGE(message_ADCSRB);
+
+char message_ADCL[1024];
+sprintf(message_ADCL, "INFO! ADCL value. %u       :1:_:PASS\n", ADCL);
+TEST_MESSAGE(message_ADCL);
+
+char message_ADCH[1024];
+sprintf(message_ADCH, "INFO! ADCH value. %u       :1:_:PASS\n", ADCH);
+TEST_MESSAGE(message_ADCH);
+
+char message_DIDR2[1024];
+sprintf(message_DIDR2, "INFO! DIDR2 value. %d       :1:_:PASS\n", DIDR2);
+TEST_MESSAGE(message_DIDR2);
+
+char message_PORTK[1024];
+sprintf(message_PORTK, "INFO! PORTK value. %d       :1:_:PASS\n", PORTK);
+TEST_MESSAGE(message_PORTK);
+
+char message_DDRK[1024];
+sprintf(message_DDRK, "INFO! DDRK value. %d       :1:_:PASS\n", DDRK);
+TEST_MESSAGE(message_DDRK);
+
+char message_PINL[1024];
+sprintf(message_PINL, "INFO! PINL value. %d       :1:_:PASS\n", PINL);
+TEST_MESSAGE(message_PINL);
+
+char message_TCNT1[1024];
+sprintf(message_TCNT1, "INFO! TCNT1 value. %u       :1:_:PASS\n", TCNT1);
+TEST_MESSAGE(message_TCNT1);
+
+char message_TCCR1B[1024];
+sprintf(message_TCCR1B, "INFO! TCCR1B value. %u       :1:_:PASS\n", TCCR1B);
+TEST_MESSAGE(message_TCCR1B);
+
+char message_PORTL[1024];
+sprintf(message_PORTL, "INFO! PORTL value. %u       :1:_:PASS\n", PORTL);
+TEST_MESSAGE(message_PORTL);
+
+char message_DDRL[1024];
+sprintf(message_DDRL, "INFO! DDRL value. %u       :1:_:PASS\n", DDRL);
+TEST_MESSAGE(message_DDRL);
+
+char message_DDRC[1024];
+sprintf(message_DDRC, "INFO! DDRL value. %u       :1:_:PASS\n", DDRC);
+TEST_MESSAGE(message_DDRC);
+
+char message_TCNT2[1024];
+sprintf(message_TCNT2, "INFO! DDRL value. %u       :1:_:PASS\n", TCNT2);
+TEST_MESSAGE(message_TCNT2);
+
+char message_PORTA[1024];
+sprintf(message_PORTA, "INFO! DDRL value. %u       :1:_:PASS\n", PORTA);
+TEST_MESSAGE(message_PORTA);
+
+char message_TCCR2B[1024];
+sprintf(message_TCCR2B, "INFO! DDRL value. %u       :1:_:PASS\n", TCCR2B);
+TEST_MESSAGE(message_TCCR2B);
+
+char message_TCCR2A[1024];
+sprintf(message_TCCR2A, "INFO! DDRL value. %u       :1:_:PASS\n", TCCR2A);
+TEST_MESSAGE(message_TCCR2A);
+
+char message_DDRA[1024];
+sprintf(message_DDRA, "INFO! DDRL value. %u       :1:_:PASS\n", DDRA);
+TEST_MESSAGE(message_DDRA);
+
+}
