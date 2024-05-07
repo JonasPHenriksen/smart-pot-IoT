@@ -46,15 +46,16 @@ void test_moisture_driver_read_not_dry()
 {
   //moisture_init();
   //moisture_read();
+      TEST_MESSAGE("INFO! Put fingers over moisture sensore so there is a connection in 5       :1:_:PASS\n");
       _delay_ms(1000);
-         TEST_MESSAGE("INFO! Put fingers over moisture sensore so there is a connection in 4       :1:_:PASS\n");
-         _delay_ms(1000);
-         TEST_MESSAGE("INFO! Put fingers over moisture sensore so there is a connection in 3       :1:_:PASS\n");
-         _delay_ms(1000);
-         TEST_MESSAGE("INFO! Put fingers over moisture sensore so there is a connection in 2       :1:_:PASS\n");
-         _delay_ms(1000);
-         TEST_MESSAGE("INFO! Put fingers over moisture sensore so there is a connection in 1       :1:_:PASS\n");
-        _delay_ms(1000);
+      TEST_MESSAGE("INFO! Put fingers over moisture sensore so there is a connection in 4       :1:_:PASS\n");
+      _delay_ms(1000);
+      TEST_MESSAGE("INFO! Put fingers over moisture sensore so there is a connection in 3       :1:_:PASS\n");
+      _delay_ms(1000);
+      TEST_MESSAGE("INFO! Put fingers over moisture sensore so there is a connection in 2       :1:_:PASS\n");
+      _delay_ms(1000);
+      TEST_MESSAGE("INFO! Put fingers over moisture sensore so there is a connection in 1       :1:_:PASS\n");
+      _delay_ms(1000);
 
   //TEST_ASSERT(moisture_read() > 0);
   TEST_ASSERT_GREATER_THAN(0, moisture_read());
@@ -67,8 +68,8 @@ void test_moisture_driver_read_not_dry()
 int main(void)
 {
   UNITY_BEGIN();
+  //RUN_TEST(test_correct_moisture_driver_initialization);
   RUN_TEST(test_moisture_driver_read_dry);
-   TEST_MESSAGE("INFO! Put fingers over moisture sensore so there is a connection in 5       :1:_:PASS\n");
   RUN_TEST(test_moisture_driver_read_not_dry);
 
 
