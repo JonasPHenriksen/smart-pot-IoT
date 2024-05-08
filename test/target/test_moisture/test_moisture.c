@@ -46,15 +46,22 @@ void test_moisture_driver_read_not_dry()
 {
   //moisture_init();
   //moisture_read();
+    display_init()
+    _delay_ms(200)
       TEST_MESSAGE("INFO! Put fingers over moisture sensore so there is a connection in 5       :1:_:PASS\n");
+      display_setValues(0005)
       _delay_ms(1000);
       TEST_MESSAGE("INFO! Put fingers over moisture sensore so there is a connection in 4       :1:_:PASS\n");
+            display_setValues(0004)
       _delay_ms(1000);
       TEST_MESSAGE("INFO! Put fingers over moisture sensore so there is a connection in 3       :1:_:PASS\n");
+            display_setValues(0003)
       _delay_ms(1000);
       TEST_MESSAGE("INFO! Put fingers over moisture sensore so there is a connection in 2       :1:_:PASS\n");
+            display_setValues(0002)
       _delay_ms(1000);
       TEST_MESSAGE("INFO! Put fingers over moisture sensore so there is a connection in 1       :1:_:PASS\n");
+            display_setValues(0001)
       _delay_ms(1000);
 
   //TEST_ASSERT(moisture_read() > 0);
