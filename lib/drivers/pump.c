@@ -8,10 +8,12 @@ void pump_init() {
     DDRC |= (1 << OUTPUT_PIN); //set PC1 as an output
 }
 
-void pump_run(int delay_ms){
+void pump_run(int volume_ml){
 
-        PORTC |= (1 << OUTPUT_PIN); //Set port to HIGH
-        _delay_ms(delay_ms);
-        
-        PORTC &= ~(1 << OUTPUT_PIN); //Set port to LOW
+    float flow_rate_ml_s = 36.11;
+    int pump_delay = (int)(volume_ml / flow_rate_ml_s * 1000);
+
+    PORTC |= (1 << OUTPUT_PIN); //Set port to HIGH
+    _delay_ms(pump_delay);
+    PORTC &= ~(1 << OUTPUT_PIN); //Set port to LOW
 }
