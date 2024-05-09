@@ -39,7 +39,7 @@ void moisture_init() {
 
 }
 
-uint8_t moisture_read() {
+uint16_t moisture_read() {
   // Start the ADC conversion
   ADCSRA |= (1 << ADSC);
   
@@ -57,8 +57,5 @@ uint8_t moisture_read() {
   // ADD THE LOW BYTE AND HIGH BYTE (SHIFT POSITION BY 8 TO LEFT)
   uint16_t adc_value = ADCL;
   adc_value |= (ADCH << 8);
-
-  uint8_t moisture_percentage = (1 - ((float)adc_value / 1023.0)) * 100;
-
-  return moisture_percentage;
+  return adc_value;
 }
