@@ -1,6 +1,7 @@
 #include "includes.h"
-
+#include <stdbool.h>
 #include <inttypes.h>
+
 
 //Vcc
 //#define DDR_Vcc DDRC
@@ -39,9 +40,9 @@ uint16_t hc_sr04_takeMeasurement()
 {
     uint16_t cnt = 0;
 
-    _delay_us(10);
+    _delay_ms(10);
     PORT_trig |= (1 << P_Trig); // trig is set to high for 10 us to start measurement.
-    _delay_us(10);
+    _delay_ms(10);
     PORT_trig &= ~(1 << P_Trig);
 
 
@@ -107,4 +108,17 @@ uint32_t timeout_counter = 0;
     */
     cnt = cnt * 343UL / 125UL;
     return cnt;
+}
+
+
+void hc_sr04_toggle(bool state)
+{
+    if (state) {
+        _delay_ms(10);
+        PORT_trig |= (1 << P_Trig); // trig is set to high for 10 us to start measurement.
+
+    } else {
+        // Ensure trigger pin is low
+        PORT_trig &= ~(1 << P_Trig);
+    }
 }

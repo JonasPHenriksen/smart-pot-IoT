@@ -75,4 +75,8 @@ char message_DDRA[1024];
 sprintf(message_DDRA, "INFO! DDRL value. %u       :1:_:PASS\n", DDRA);
 TEST_MESSAGE(message_DDRA);
 
+char message_end[1024];
+sprintf(message_end, "____________ END OF VALUES DISPLAY ______________        :1:_:PASS\n");
+TEST_MESSAGE(message_end);
+
 }
