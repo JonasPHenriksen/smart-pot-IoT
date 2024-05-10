@@ -1,9 +1,6 @@
 #include "../test/fff.h"
 #include "unity.h"
-
 #include "light.h"
-
-
 #include <stdio.h>
 #include <stdint.h>
 
@@ -21,32 +18,35 @@ DEFINE_FFF_GLOBALS
 
 void setUp(void)
 {
-  
+  FFF_RESET_HISTORY();
 }
+
 void tearDown(void) {}
 
 
-void test_pc_comm_default_callback_func_is_null()
+void test_light_init()
 {
+
     light_init();
 
   TEST_ASSERT_EQUAL(71,ADMUX);
-
+  TEST_ASSERT_EQUAL(135,ADCSRA);
+  TEST_ASSERT_EQUAL(128,DIDR2);
 }
 
+void test_light_read()
+{
 
+  light_read();
 
+  TEST_ASSERT_EQUAL(199,ADCSRA);
 
-
-
-// Test that it sendst stuff nonBlocking. 
+}
 
 int main(void)
 {
   UNITY_BEGIN();
-  RUN_TEST(test_pc_comm_default_callback_func_is_null);
-
-
-
+  RUN_TEST(test_light_init);
+  RUN_TEST(test_light_read);
   return UNITY_END();
 }
