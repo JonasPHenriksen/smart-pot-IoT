@@ -27,6 +27,8 @@ def get_workflow_run_id(owner, repo, token):
         return input("Enter the workflow ID to download artifacts from: ").strip()
     else:
         print("Invalid choice. Please enter Y or N.")
+        os.system('pause')
+        exit(1)
         return None
 
 
@@ -105,25 +107,24 @@ def run_tests():
         # Check test result
         if "FAILED" in result.stdout:
             print("Tests failed. Firmware will not be flashed")
-        else:
+
+        elif "succeed" in result.stdout:
             print("Tests passed. Flashing to avr...")
             flash_firmware()
+            
+        else:
+            print("Unable to initialize test_env")
+            
     except subprocess.CalledProcessError as e:
         print("Error:", e)
 
 # Provide GitHub repository information to retrieve workflow ID
 owner = "JonasPHenriksen"
-repo = "IoTCICDTest"
-token = "Insert personal token here" 
+repo = "smart-pot-IoT"
+token = "insert token here" 
 
 # Set the baud rate (115200 for Arduino Mega 2560)
 BAUD_RATE = "115200"
-
-# Get the latest workflow run ID or costume input
-run_id = get_workflow_run_id(owner, repo, token)
-
-if run_id:
-    bypass = download_github_artifact(owner, repo, run_id, token, "firmware")
 
 # Get a list of all connected devices
 connected_devices = find_connected_devices()
@@ -138,6 +139,12 @@ print("Connected devices:")
 for port, description in connected_devices:     
     print(f"- {description}: {port}")
 
+# Get the latest workflow run ID or costume input
+run_id = get_workflow_run_id(owner, repo, token)
+
+if run_id:
+    bypass = download_github_artifact(owner, repo, run_id, token, "firmware")
+
 if bypass:
     choice = input("Run tests before flashing? (Y/N): ").strip().lower()
     if choice == "y":
@@ -146,6 +153,8 @@ if bypass:
         flash_firmware()
     else:
         print("Invalid choice. Please enter Y or N.")
+        os.system('pause')
+        exit(1)
 else:
     flash_firmware()
 

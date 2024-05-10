@@ -1,17 +1,24 @@
 #include "pump.h"
 #include "includes.h"
 
-#define PC1 1
-#define OUTPUT_PIN PC1 //PC1 is the pin that we are connected to and using to send the current.
-
 void pump_init() {
     DDRC |= (1 << OUTPUT_PIN); //set PC1 as an output
 }
 
-void pump_run(int delay_ms){
+void pump_run(int volume_ml){
 
-        PORTC |= (1 << OUTPUT_PIN); //Set port to HIGH
-        _delay_ms(delay_ms);
-        
-        PORTC &= ~(1 << OUTPUT_PIN); //Set port to LOW
+    float flow_rate_ml_s = 36.11;
+    int pump_delay = (int)(volume_ml / flow_rate_ml_s * 1000);
+
+    pump_on();
+    _delay_ms(pump_delay);
+    pump_off();
+}
+
+void pump_on() {
+    PORTC |= (1 << OUTPUT_PIN); //Set port to HIGH
+}
+
+void pump_off() {
+    PORTC &= ~(1 << OUTPUT_PIN); //Set port to LOW
 }
