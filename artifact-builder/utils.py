@@ -1,5 +1,6 @@
 import serial.tools.list_ports
 import os
+from sys import exit
 
 def find_connected_devices():
   devices = [
