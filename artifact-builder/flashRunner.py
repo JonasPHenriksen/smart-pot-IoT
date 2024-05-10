@@ -1,8 +1,11 @@
 from platformio_utils import *
 from github_utils import *
+from sys import exit
+import atexit
 
 if __name__ == "__main__":
   os.system("cls")
+  atexit.register(lambda: os.system("pause"))
   print("""
   ╭────────────────────────────╮
   │ SMART POT FIRMWARE FLASHER │
