@@ -1,27 +1,31 @@
 import subprocess
+import sys
+from platformio.test.cli import cli
+from io import StringIO
+
 
 def run_tests():
-  command = [
-    "platformio",
-    "test",
-    "-e", "target_run"
-  ]
-  print("Running tests...")
-  try:
-    result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
-    print(result.stdout)
+  # Capture output when running tests in buffer
+  # stderr is used since conclusion is printed here
+  stdout_capture = StringIO()
+  sys.stderr = stdout_capture
 
-    # Check test result
-    if "FAILED" in result.stdout or "ERRORED" in result.stdout:
-      print("Tests failed. Firmware will not be flashed")
-    elif "test cases: 0 failed" in result.stdout:
-      print("Tests passed. Flashing to avr...")
-      return True
-    else:
-      print("Unable to initialize test_env")
-      
-  except subprocess.CalledProcessError as e:
-    print("error", e)
+  # Run tests
+  try:
+    cli.main(["-e", "target_run"])
+  except:
+    pass
+  
+  # Reset to default buffer
+  sys.stderr = sys.__stderr__
+
+  result = stdout_capture.getvalue()
+
+  if "test cases: 0 failed" in result:
+    print("Tests passed. Flashing to avr...")
+    return True
+
+  print("Tests failed. Firmware will not be flashed.")
 
 # Flash the firmware using AVRDUDE for Arduino devices
 def flash_firmware(devices):
