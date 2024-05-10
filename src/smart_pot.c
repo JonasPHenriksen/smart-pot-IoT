@@ -40,9 +40,15 @@ uint8_t getWaterLevel() {
 }
 uint8_t getMoisture() {
   uint16_t moisture = moisture_read();
-  uint8_t moisture_percentage = (1 - ((float)moisture / 1023.0)) * 100;
+  uint8_t moisture_percentage = percentage(moisture,1023);
   return moisture_percentage;
 }
+
+int percentage(int value, int ceiling){
+    return (1 - ((float)value / ceiling)) * 100;
+}
+
+
 bool playBuzzer(song_enum_t song) {
   switch (song) {
     case SONG_LOW_WATER_LEVEL:
