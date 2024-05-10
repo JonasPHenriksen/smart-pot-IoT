@@ -1,9 +1,14 @@
-#include <avr/io.h>
-#include <EEPROM_promter.h>
+#include "includes.h"
+#include "EEPROM_promter.h"
 
-void EEPROM_write(uint8_t uiAddress, uint8_t ucData) {
+
+void EEPROM_write(uint16_t uiAddress, uint8_t ucData) {
   // Wait for completion of previous write /
+  uint8_t timeout_counter = 0; 
   while(EECR & (1<<EEPE))
+          if (++timeout_counter > 100) {
+        break;
+    }
   ;
 
   // Set up address and Data Registers /
@@ -15,9 +20,13 @@ void EEPROM_write(uint8_t uiAddress, uint8_t ucData) {
   EECR |= (1<<EEPE);
 }
 
-uint8_t EEPROM_read(uint8_t uiAddress) {
+uint8_t EEPROM_read(uint16_t uiAddress) {
   // Wait for completion of previous write /
+  uint8_t timeout_counter = 0; 
   while(EECR & (1<<EEPE))
+          if (++timeout_counter > 100) {
+        break;
+        }
   ;
   // Set up address register /
   EEAR = uiAddress;
