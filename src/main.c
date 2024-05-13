@@ -7,6 +7,7 @@
 #include <Arduino.h>
 #include "tcp_command_receiver.h"
 #include "smart_pot.h"
+#include "uart_custom.h"
 
 unsigned long interval = 1000;
 unsigned long previousMillis = 0;
@@ -15,10 +16,21 @@ int buttonState = 0;
 const int buttonPin = 2;    // Pin connected to the external button
 const int ledPin = 13;      // Pin connected to the LED (built-in LED for Arduino Mega)
 
+char messageBuffer[256];
+
+void callback() {
+  uartSend(messageBuffer);
+}
+
 void setup() {
+  uartInit(9600);
   wifi_init();
   smartPotInit();
   pinMode(buttonPin, INPUT_PULLUP);  // Set button pin as input with pull-up resistor
+  wifi_command_join_AP("YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
+
+  //WIFI_ERROR_MESSAGE_t error = wifi_command_create_TCP_connection("13.53.174.85", 11000, &callback, &messageBuffer);
+  WIFI_ERROR_MESSAGE_t error = wifi_command_create_TCP_connection("192.168.43.80", 23, &callback, &messageBuffer);
 }
 
 void loop() {
@@ -76,13 +88,32 @@ void loop() {
     if (buttons_2_pressed()) {
       // tone_play_mario();
       // playBuzzer(SONG_WATERING);
-      uint16_t value = EEPROM_read(100);
-      uint8_t digit1 = value / 1000;       // Extract thousands digit
-      uint8_t digit2 = (value / 100) % 10; // Extract hundreds digit
-      uint8_t digit3 = (value / 10) % 10;  // Extract tens digit
-      uint8_t digit4 = value % 10;         // Extract units digit
+      // uint16_t value = EEPROM_read(100);
+      // uint8_t digit1 = value / 1000;       // Extract thousands digit
+      // uint8_t digit2 = (value / 100) % 10; // Extract hundreds digit
+      // uint8_t digit3 = (value / 10) % 10;  // Extract tens digit
+      // uint8_t digit4 = value % 10;         // Extract units digit
 
-      display_setValues(digit1, digit2, digit3, digit4);
+      // display_setValues(digit1, digit2, digit3, digit4);
+
+    const char* keys[] = {"MachineID", "WaterTankLevel", "MeasuredSoilMoisture", "AmountOfWatering"};
+    const char* values[] = {"123","80.0", "30", "100"};
+    // cJSON* json = rawDatasToJSON(4, keys, values);
+    char* jsonString = rawDatasToJSONString(4, keys, values);
+
+    //const char* jsonString = "{\"MachineID\": \"123\", \"WaterTankLevel\": 75.0, \"MeasuredSoilMoisture\": 22.0, \"AmountOfWatering\": 500}";
+    //const char* jsonString = "{\"MachineID\": \"103\", \"WaterTankLevel\": 75, \"MeasuredSoilMoisture\": 22, \"AmountOfWatering\": 500}";
+
+
+
+    // char* jsonString = cJSON_Print(json);
+    wifi_command_TCP_transmit(jsonString, strlen(jsonString));
+
+
+    // cJSON_Delete(json);
+    free(jsonString);
+
+
     }
     if (buttons_3_pressed()) {
       // playBuzzer(SONG_ERROR);
