@@ -1,7 +1,7 @@
 #include "unity.h"
 #include "hc_sr04.h"
 #include <stdint.h>
-#include <util/delay.h>
+#include "includes.h"
 #include <stdio.h>
 
 
@@ -18,6 +18,9 @@ void tearDown(void)
 void test_hc_sr04_is_measoring_between_5cm_and_3m()
 {
 
+    hc_sr04_init();
+    _delay_ms(500);
+
     uint16_t distance = hc_sr04_takeMeasurement();
 
     char message[1024];
@@ -29,6 +32,8 @@ void test_hc_sr04_is_measoring_between_5cm_and_3m()
 
 void test_hc_sr04_is_measoring_over_3m()
 {
+        hc_sr04_init();
+    _delay_ms(500);
     uint16_t distance = hc_sr04_takeMeasurement();
 
     char message[1024];
@@ -40,6 +45,8 @@ void test_hc_sr04_is_measoring_over_3m()
 
 void test_hc_sr04_is_measoring_between_9cm_and_11cm()
 {
+        hc_sr04_init();
+    _delay_ms(500);
     uint16_t distance = hc_sr04_takeMeasurement();
 
     char message[1024];
@@ -55,10 +62,10 @@ int main(void)
     UNITY_BEGIN();
     _delay_ms(500);
     RUN_TEST(test_hc_sr04_is_measoring_between_5cm_and_3m);
-    TEST_MESSAGE("Remove everything in around 3 meter in fron of hc_sr04 sensor        :1:_:PASS\n")
+    TEST_MESSAGE("Remove everything in around 3 meter in fron of hc_sr04 sensor        :1:_:PASS\n");
     _delay_ms(2000);
     RUN_TEST(test_hc_sr04_is_measoring_over_3m);
-    TEST_MESSAGE("Place something 10cm in front of the sensor        :1:_:PASS\n")
+    TEST_MESSAGE("Place something 10cm in front of the sensor        :1:_:PASS\n");
     RUN_TEST(test_hc_sr04_is_measoring_between_9cm_and_11cm);
 
     
