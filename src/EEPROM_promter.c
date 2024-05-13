@@ -15,7 +15,7 @@ void EEPROM_write(uint16_t uiAddress, uint8_t ucData) {
   EECR |= (1<<EEPE);
 }
 
-uint8_t EEPROM_read(uint16_t uiAddress) {
+uint8_t EEPROM_read_uint8(uint16_t uiAddress) {
   // Wait for completion of previous write /
   while(EECR & (1<<EEPE))
   ;
@@ -25,4 +25,24 @@ uint8_t EEPROM_read(uint16_t uiAddress) {
   EECR |= (1<<EERE);
   // Return data from Data Register /
   return EEDR;
+}
+
+uint16_t EEPROM_read_uint16(uint16_t uiAddress1, uint16_t uiAddress2){
+  unsigned char byte1 = EEPROM_read_uint8(uiAddress1);
+  unsigned char byte2 = EEPROM_read_uint8(uiAddress2);
+
+  uint16_t value = (byte1 << 8) | byte2;
+
+  return value;
+}
+
+uint32_t EEPROM_read_uint32(uint16_t uiAddress1, uint16_t uiAddress2, uint16_t uiAddress3, uint16_t uiAddress4){
+  unsigned char byte1 = EEPROM_read_uint8(uiAddress1);
+  unsigned char byte2 = EEPROM_read_uint8(uiAddress2);
+  unsigned char byte3 = EEPROM_read_uint8(uiAddress3);
+  unsigned char byte4 = EEPROM_read_uint8(uiAddress4);
+
+  uint32_t value = (byte1 << 24) | (byte2 << 16) | (byte3 << 8) | byte4;
+
+  return value;
 }
