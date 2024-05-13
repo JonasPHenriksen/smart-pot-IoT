@@ -23,11 +23,11 @@
  * 
  */
 typedef enum{
-    WIFI_OK,                         /**< Command successful. */
-    WIFI_FAIL,                       /**< General failure or operation not successful. */
-    WIFI_ERROR_RECEIVED_ERROR,       /**< Received an error message from the module. */
-    WIFI_ERROR_NOT_RECEIVING,        /**< No data received from the module. */
-    WIFI_ERROR_RECEIVING_GARBAGE     /**< Received unintelligible data from the module. */
+  WIFI_OK,                         /**< Command successful. */
+  WIFI_FAIL,                       /**< General failure or operation not successful. */
+  WIFI_ERROR_RECEIVED_ERROR,       /**< Received an error message from the module. */
+  WIFI_ERROR_NOT_RECEIVING,        /**< No data received from the module. */
+  WIFI_ERROR_RECEIVING_GARBAGE     /**< Received unintelligible data from the module. */
 } WIFI_ERROR_MESSAGE_t;
 
 /**
@@ -77,7 +77,7 @@ WIFI_ERROR_MESSAGE_t wifi_command_set_mode_to_1();
  * 
  * @return WIFI_ERROR_MESSAGE_t Error message based on the response from the module.
  */
-WIFI_ERROR_MESSAGE_t wifi_command_set_to_single_Connection();
+WIFI_ERROR_MESSAGE_t wifi_command_set_to_single_connection();
 
 /**
  * @brief Getting the ip based on the url. The user should provide a string with the URL and a buffer for the response

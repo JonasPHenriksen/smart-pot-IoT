@@ -1,6 +1,4 @@
-#ifndef EEPROM_H
-#define EEPROM_H
-
+#pragma once
 #include <avr/io.h>
 #include <stdint.h>
 
@@ -11,6 +9,3 @@ void EEPROM_write(uint16_t uiAddress, uint8_t ucData);
 uint8_t EEPROM_read_uint8(uint16_t uiAddress);
 uint16_t EEPROM_read_uint16(uint16_t uiAddress1, uint16_t uiAddress2);
 uint32_t EEPROM_read_uint32(uint16_t uiAddress1, uint16_t uiAddress2, uint16_t uiAddress3, uint16_t uiAddress4);
-
-
-#endif // EEPROM_H 
