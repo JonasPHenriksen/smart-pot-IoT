@@ -17,16 +17,16 @@
 #include "EEPROM_promter.h"
 
 typedef enum {
-  SONG_LOW_WATER_LEVEL,
-  SONG_MOISTURE,
-  SONG_WATERING,
-  SONG_ERROR
-} song_enum_t;
+  SMART_POT_SONG_LOW_WATER_LEVEL,
+  SMART_POT_SONG_MOISTURE,
+  SMART_POT_SONG_WATERING,
+  SMART_POT_SONG_ERROR
+} SMART_POT_SONG_t;
 
-void smartPotInit();
-void setWaterAmount(uint32_t waterAmount);
-void setMoistLevel(uint8_t moist);
-uint32_t tryWater();
-bool playBuzzer(song_enum_t song);
-uint8_t getMoisture();
-uint8_t getWaterLevel();
+void smart_pot_init();
+bool smart_pot_playBuzzer(SMART_POT_SONG_t song);
+void smart_pot_setMoistLevel(uint8_t moist);
+void smart_pot_setWaterAmount(uint8_t water);
+uint8_t smart_pot_tryWater();
+uint8_t smart_pot_getMoisture();
+uint8_t smart_pot_getWaterLevel();

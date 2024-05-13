@@ -18,7 +18,7 @@ void tearDown(void) {}
 FAKE_VOID_FUNC(uart_init, USART_t , uint32_t , UART_Callback_t );
 FAKE_VOID_FUNC(uart_send_array_blocking, USART_t, uint8_t*, uint16_t);
 FAKE_VOID_FUNC(uart_send_string_blocking, USART_t, char*);
-FAKE_VOID_FUNC(uart_send_array_nonBlocking, USART_t, uint8_t *, uint16_t);
+FAKE_VOID_FUNC(uart_send_array_non_blocking, USART_t, uint8_t *, uint16_t);
 
 void test_pc_comm_default_callback_func_is_null()
 {

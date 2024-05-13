@@ -20,7 +20,7 @@ uint8_t TEST_BUFFER[128];
 void TCP_Received_callback_func();
 FAKE_VOID_FUNC(TCP_Received_callback_func);
 
-FAKE_VOID_FUNC(uart_send_array_nonBlocking, USART_t, uint8_t *, uint16_t);
+FAKE_VOID_FUNC(uart_send_array_non_blocking, USART_t, uint8_t *, uint16_t);
 
 void setUp(void)
 {
