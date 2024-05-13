@@ -13,6 +13,9 @@
 #include "hc_sr04.h"
 #include "pump.h"
 
+// UTILS
+#include "EEPROM_promter.h"
+
 typedef enum {
   SONG_LOW_WATER_LEVEL,
   SONG_MOISTURE,
