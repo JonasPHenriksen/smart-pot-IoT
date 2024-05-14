@@ -6,4 +6,4 @@ void pump_init();
 void pump_on();
 void pump_off();
 void pump_run(uint8_t volume_ml);
-static int volume_to_delay(uint8_t volume_ml);
+int pump_volume_to_delay(uint8_t volume_ml);

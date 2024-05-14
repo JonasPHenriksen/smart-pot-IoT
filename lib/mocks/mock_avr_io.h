@@ -16,6 +16,7 @@ void sei(void );
 #define RXEN0 4
 #define RXCIE0 7
 
+
 #define DDA6 6
 #define DDA4 4
 #define DDC7 7
@@ -67,6 +68,7 @@ extern uint8_t UCSR0A;
 extern uint8_t UCSR1A;
 extern uint8_t UCSR2A;
 extern uint8_t UCSR3A;
+extern uint8_t RXC0;
 
 #define UDRE0 5
 #define UDRE1 5
