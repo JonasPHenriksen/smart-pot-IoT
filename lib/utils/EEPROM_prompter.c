@@ -2,7 +2,12 @@
 
 void EEPROM_write(uint16_t uiAddress, uint8_t ucData) {
   // Wait for completion of previous write /
-  while (EECR & (1<<EEPE)) {}
+  //while () {}
+  for (size_t i = 0; i < 8; i++)
+  {
+    EECR & (1<<EEPE);
+  }
+  
 
   // Set up address and Data Registers /
   EEAR = uiAddress;
@@ -15,7 +20,12 @@ void EEPROM_write(uint16_t uiAddress, uint8_t ucData) {
 
 uint8_t EEPROM_read_uint8(uint16_t uiAddress) {
   // Wait for completion of previous write /
-  while (EECR & (1<<EEPE)) {}
+  //while (EECR & (1<<EEPE)) {}
+
+  for (size_t i = 0; i < 8; i++)
+  {
+    EECR & (1<<EEPE);
+  }
   // Set up address register /
   EEAR = uiAddress;
   // Start eeprom read by writing EERE /
