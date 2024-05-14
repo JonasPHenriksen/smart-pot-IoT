@@ -1,6 +1,6 @@
 #include "../test/fff.h"
 #include "unity.h"
-#include "EEPROM_promter.h"
+#include "EEPROM_prompter.h"
 #include <stdio.h>
 #include <stdint.h>
 
