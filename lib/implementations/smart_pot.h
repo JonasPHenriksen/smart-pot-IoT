@@ -14,7 +14,7 @@
 #include "pump.h"
 
 // UTILS
-#include "EEPROM_promter.h"
+#include "EEPROM_prompter.h"
 
 typedef enum {
   SMART_POT_SONG_LOW_WATER_LEVEL,

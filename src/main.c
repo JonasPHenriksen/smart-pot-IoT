@@ -7,7 +7,7 @@
 #include "wifi.h"
 #include "monitor.h"
 #include "smart_pot.h"
-#include "EEPROM_promter.h"
+#include "EEPROM_prompter.h"
 #include "JsonConvert.h"
 
 unsigned long previousMillis = 0;
