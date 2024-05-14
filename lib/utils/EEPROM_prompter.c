@@ -1,4 +1,4 @@
-#include <EEPROM_promter.h>
+#include "EEPROM_prompter.h"
 
 void EEPROM_write(uint16_t uiAddress, uint8_t ucData) {
   // Wait for completion of previous write /
@@ -14,7 +14,6 @@ void EEPROM_write(uint16_t uiAddress, uint8_t ucData) {
 }
 
 uint8_t EEPROM_read_uint8(uint16_t uiAddress) {
-  return 0;
   // Wait for completion of previous write /
   while (EECR & (1<<EEPE)) {}
   // Set up address register /
@@ -27,7 +26,6 @@ uint8_t EEPROM_read_uint8(uint16_t uiAddress) {
 }
 
 uint16_t EEPROM_read_uint16(uint16_t uiAddress1, uint16_t uiAddress2){
-  return 0;
   uint8_t byte1 = EEPROM_read_uint8(uiAddress1);
   uint8_t byte2 = EEPROM_read_uint8(uiAddress2);
 
@@ -37,7 +35,6 @@ uint16_t EEPROM_read_uint16(uint16_t uiAddress1, uint16_t uiAddress2){
 }
 
 uint32_t EEPROM_read_uint32(uint16_t uiAddress1, uint16_t uiAddress2, uint16_t uiAddress3, uint16_t uiAddress4){
-  return 0;
   uint8_t byte1 = EEPROM_read_uint8(uiAddress1);
   uint8_t byte2 = EEPROM_read_uint8(uiAddress2);
   uint8_t byte3 = EEPROM_read_uint8(uiAddress3);
