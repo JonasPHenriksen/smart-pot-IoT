@@ -14,8 +14,8 @@
  * @brief DHT11 Error messages.
  */
 typedef enum{
-    DHT11_OK,                         /**< Command successful. */
-    DHT11_FAIL,                       /**< General failure or operation not successful. */
+  DHT11_OK,                         /**< Command successful. */
+  DHT11_FAIL,                       /**< General failure or operation not successful. */
 } DHT11_ERROR_MESSAGE_t;
 
 /**
