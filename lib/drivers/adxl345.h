@@ -1,12 +1,7 @@
 #pragma once
 #include <inttypes.h>
 
-
-
-void adxl345_init(void);
-
-
-
+void adxl345_init();
 void adxl345_write_register(uint8_t reg, uint8_t value);
 
 /// @brief It returns the acceleration in the 3 direction. the number is a int16_t, 
