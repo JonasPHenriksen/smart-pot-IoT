@@ -6,7 +6,11 @@
 #define SMARTPOT_WATER_TANK_BOTTOM_ADDR1 2003
 #define SMARTPOT_WATER_TANK_BOTTOM_ADDR2 2003
 
+#define SMARTPOT_MIN_WATERING_WATER_LEVEL_PERCENTAGE 5
+#define SMARTPOT_LOW_WATER_LEVEL_PERCENTAGE 25
+
 static uint8_t waterAmount;
+static uint8_t waterLevelPercentage;
 static uint8_t moistureLevel;
 static uint16_t waterTankBottom;
 static uint8_t machineGen;
@@ -41,7 +45,11 @@ void smart_pot_setMoistLevel(uint8_t moist) {
 
 uint8_t smart_pot_tryWater() {
   uint8_t moisture = smart_pot_getMoisture();
-  if (moisture < moistureLevel) {
+  if (
+    (moisture < moistureLevel) && 
+    (waterLevelPercentage > SMARTPOT_MIN_WATERING_WATER_LEVEL_PERCENTAGE)
+  ) {
+    smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
     pump_run(waterAmount);
     return waterAmount;
   }
@@ -50,7 +58,7 @@ uint8_t smart_pot_tryWater() {
 
 uint8_t smart_pot_getWaterLevel() {
   // 30 + 50 mm
-  uint16_t waterLevel = hc_sr04_takeMeasurement() - 30;
+  uint8_t waterLevel = hc_sr04_takeMeasurement() - 30;
   uint8_t limit = waterTankBottom - 30;
   if (waterLevel < 0) {
     waterLevel = 0;
@@ -58,7 +66,11 @@ uint8_t smart_pot_getWaterLevel() {
   if (waterLevel > limit) {
     waterLevel = limit;
   }
-  uint8_t waterLevelPercentage = percentage(waterLevel, limit);
+  waterLevelPercentage = percentage(waterLevel, limit);
+
+  if (waterLevelPercentage <= SMARTPOT_LOW_WATER_LEVEL_PERCENTAGE) {
+    smart_pot_playBuzzer(SMART_POT_SONG_LOW_WATER_LEVEL);
+  }
 
   return waterLevelPercentage;
 }
