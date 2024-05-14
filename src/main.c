@@ -8,6 +8,7 @@
 // #include "tcp_command_receiver.h"
 #include "smart_pot.h"
 #include "uart.h"
+#include "pump.h"
 
 unsigned long interval = 1000;
 unsigned long previousMillis = 0;
@@ -24,24 +25,13 @@ void setup() {
   // pinMode(buttonPin, INPUT_PULLUP);  // Set button pin as input with pull-up resistor
 }
 
-static int moisture_tingeling = 20;
-
 void cycle() {
+  smart_pot_setMoistLevel(20);
+  smart_pot_setWaterAmount(50);
+
   uint8_t watered = smart_pot_tryWater();
   uint8_t moisture = smart_pot_getMoisture();
   uint8_t waterLevel = smart_pot_getWaterLevel();
-
-  // Alert if low on water
-  if (waterLevel <= 25) {
-    smart_pot_playBuzzer(SMART_POT_SONG_LOW_WATER_LEVEL);
-  }
-
-  // Start watering and alert
-  if (moisture <= moisture_tingeling) {
-    smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
-    smart_pot_tryWater();
-  }
-
 
   // Send the data to the serial monitor
   char result[128];
@@ -54,24 +44,21 @@ void loop() {
 
   // Check if it's time to run the method
   if (currentMillis - previousMillis >= interval) {
-    // Update the previous time to the current time
-    previousMillis = currentMillis;
-    
-    // Increment the counter
+    previousMillis = currentMillis;    
     counter++;
-    display_setValues(0, 0, 0, counter);
+    
+    uint8_t digit1 = counter / 1000;       // Extract thousands digit
+    uint8_t digit2 = (counter / 100) % 10; // Extract hundreds digit
+    uint8_t digit3 = (counter / 10) % 10;  // Extract tens digit
+    uint8_t digit4 = counter % 10;         // Extract units digit
+    display_setValues(digit1, digit2, digit3, digit4);
+
     cycle();
   }
   intervalCounter--;
   if (intervalCounter < 0) {
     intervalCounter = 0;
   }
-  // uint8_t digit1 = intervalCounter / 1000;       // Extract thousands digit
-  // uint8_t digit2 = (intervalCounter / 100) % 10; // Extract hundreds digit
-  // uint8_t digit3 = (intervalCounter / 10) % 10;  // Extract tens digit
-  // uint8_t digit4 = intervalCounter % 10;         // Extract units digit
-
-  // display_setValues(digit1, digit2, digit3, digit4);
 
   if (buttons_1_pressed() && buttons_2_pressed()) {
     smart_pot_playBuzzer(SMART_POT_SONG_LOW_WATER_LEVEL);
