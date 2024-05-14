@@ -1,7 +1,7 @@
 #include <avr/io.h>
-#include "uart.h"
+#include "monitor.h"
 
-void uartInit(int baudrate) {
+void monitor_init(int baudrate) {
   unsigned int ubrr = ((F_CPU / (16UL * baudrate)) - 1);
   // Set baud rate Page 203
   UBRR0H = (unsigned char)(ubrr >> 8);
@@ -13,7 +13,7 @@ void uartInit(int baudrate) {
   // Set frame format: 8 data bits, 1 stop bit, no parity page 221
   UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
 }
-void uartSend(char *data) {
+void monitor_send(char *data) {
   while (*data) {
     // Wait for empty transmit buffer
     while (!(UCSR0A & (1 << UDRE0)));
@@ -24,7 +24,7 @@ void uartSend(char *data) {
   }
 }
 
-char* uartReceive() {
+char* monitor_receive() {
   static char buffer[64];
   char *bufPtr = buffer;
   char received;
