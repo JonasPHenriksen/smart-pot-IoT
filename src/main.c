@@ -12,12 +12,14 @@
 
 unsigned long previousMillis = 0;
 unsigned long currentMillis = 0;
-unsigned long interval = 5000;
+unsigned long interval = 3 * 1000;
 unsigned long counter = 0;
 
+unsigned long requestTimeout = 5 * 1000;
+uint8_t receivedResponse = false;
+
 void cycle() {
-  smart_pot_setMoistLevel(20);
-  smart_pot_setWaterAmount(50);
+  receivedResponse = false;
 
   uint8_t watered = smart_pot_tryWater();
   uint8_t moisture = smart_pot_getMoisture();
@@ -27,12 +29,51 @@ void cycle() {
   char result[128];
   sprintf(result, "Watered: %d, Moisture: %d, Water Level: %d\n", watered, moisture, waterLevel);
   monitor_send(result);
+  
+  const char* keys[] = {"MachineID", "WaterTankLevel", "MeasuredSoilMoisture", "AmountOfWatering"};
+  char amountOfWatering[32];
+  char waterTankLevel[32];
+  char measuredSoilMoisture[32];
+  sprintf(amountOfWatering, "%d", watered);
+  sprintf(waterTankLevel, "%d", waterLevel);
+  sprintf(measuredSoilMoisture, "%d", moisture);
+
+  const char* values[] = {"999",waterTankLevel, measuredSoilMoisture, amountOfWatering};
+  char* jsonString = rawDatasToJSONString(4, keys, values);
+  wifi_command_TCP_transmit(jsonString, strlen(jsonString));
+  free(jsonString);
 }
 
 char messageBuffer[256];
-
 void callback() {
-  monitor_send(messageBuffer);
+  receivedResponse = true;
+  cJSON *result = cJSON_Parse(messageBuffer);
+  if (result == NULL) {
+    return;
+  }
+
+  cJSON *machine = cJSON_GetObjectItemCaseSensitive(result, "MachineID");
+  if (strcmp(machine->valuestring, "999") != 0) {
+    return;
+  }
+
+  cJSON *moisture = cJSON_GetObjectItemCaseSensitive(result, "SoilMinimumMoisture");
+  smart_pot_setMoistLevel(moisture->valueint);
+
+  cJSON *waterAmount = cJSON_GetObjectItemCaseSensitive(result, "AmountOfWaterToBeGiven");
+  smart_pot_setWaterAmount(waterAmount->valueint);
+
+  char buffington[300];
+  sprintf(
+    buffington, 
+    "----- RECEIVED RESPONSE -----\n - ID: %s\n - Moisture: %d\n - Water Amount: %d\n", 
+    machine->valuestring, 
+    moisture->valueint,
+    waterAmount->valueint
+  );
+  monitor_send(buffington);
+
+  cJSON_Delete(result);
 }
 
 void setup() {
@@ -40,7 +81,9 @@ void setup() {
   wifi_init();
   smart_pot_init();
   wifi_command_join_AP("YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
-  wifi_command_create_TCP_connection("13.53.174.85", 11000, &callback, messageBuffer);
+  // wifi_command_create_TCP_connection("13.53.174.85", 11000, &callback, messageBuffer);
+  wifi_command_create_TCP_connection("192.168.43.221", 23, &callback, messageBuffer);
+  
 }
 
 void loop() {
@@ -59,16 +102,12 @@ void loop() {
     display_setValues(digit1, digit2, digit3, digit4);
 
     cycle();
-    
-    if (buttons_3_pressed()) {
-      const char* keys[] = {"MachineID", "WaterTankLevel", "MeasuredSoilMoisture", "AmountOfWatering"};
-      const char* values[] = {"123","80.0", "30", "100"};
-      char* jsonString = rawDatasToJSONString(4, keys, values);
-      wifi_command_TCP_transmit(jsonString, strlen(jsonString));
-      free(jsonString);
-    }
-  }
 
+    // Wait for request response
+    do {
+      currentMillis = millis();
+    } while (currentMillis - previousMillis < requestTimeout && !receivedResponse);
+  }
   
   if (buttons_1_pressed() && buttons_2_pressed()) {
     smart_pot_playBuzzer(SMART_POT_SONG_LOW_WATER_LEVEL);
