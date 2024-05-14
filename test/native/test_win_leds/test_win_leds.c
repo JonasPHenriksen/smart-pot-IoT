@@ -44,48 +44,38 @@ void test_leds_light(void) {
     PORTB = 240;
     DDRB = 240;
 
-    testChanges();
-
-    leds_turnOn(1);
+    leds_turn_on(1);
 
     TEST_ASSERT_EQUAL_UINT8(112, PORTB);
     TEST_ASSERT_EQUAL_UINT8(240, DDRB);
 
-    testChanges();
-
-        leds_turnOn(2);
+    leds_turn_on(2);
 
     TEST_ASSERT_EQUAL_UINT8(48, PORTB);
     TEST_ASSERT_EQUAL_UINT8(240, DDRB);
 
-    testChanges();
-
-        leds_turnOn(3);
+    leds_turn_on(3);
 
     TEST_ASSERT_EQUAL_UINT8(16, PORTB);
     TEST_ASSERT_EQUAL_UINT8(240, DDRB);
 
-    testChanges();
-
-        leds_turnOn(4);
+    leds_turn_on(4);
 
     TEST_ASSERT_EQUAL_UINT8(0, PORTB);
     TEST_ASSERT_EQUAL_UINT8(240, DDRB);
 
-    testChanges();
-
         // Test turning off individual LEDs
-    leds_turnOff(1);
-        testChanges();
+    leds_turn_off(1);
+
     TEST_ASSERT_EQUAL_UINT8(128, PORTB);
-    leds_turnOff(2);
-        testChanges();
+    leds_turn_off(2);
+
     TEST_ASSERT_EQUAL_UINT8(192, PORTB);
-    leds_turnOff(3);
-        testChanges();
+    leds_turn_off(3);
+
     TEST_ASSERT_EQUAL_UINT8(224, PORTB);
-    leds_turnOff(4);
-        testChanges();
+    leds_turn_off(4);
+
     TEST_ASSERT_EQUAL_UINT8(240, PORTB);
 }
 
@@ -99,21 +89,4 @@ int main(void) {
 
     // End the tests
     return UNITY_END();
-}
-
-
-
-void testChanges() {
-    char message_ADMUX[1024];
-sprintf(message_ADMUX, "INFO! PORTB value. %u       :1:_:PASS\n", PORTB);
-TEST_MESSAGE(message_ADMUX);
-
-char message_ADCSRA[1024];
-sprintf(message_ADCSRA, "INFO! DDRB value. %u       :1:_:PASS\n", DDRB);
-TEST_MESSAGE(message_ADCSRA);
-
-char message_end[1024];
-sprintf(message_end, "____________ END OF VALUES DISPLAY ______________        :1:_:PASS\n");
-TEST_MESSAGE(message_end);
-
 }
