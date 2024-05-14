@@ -25,12 +25,23 @@ void setUp(void)
 void tearDown(void) {}
 
 void test_hc_sr04_init(void) {
-
-    
+TEST_ASSERT_EQUAL_UINT16(0, PINL); // Ensure measurement is 0 when no echo signal is received
+TEST_ASSERT_EQUAL_UINT16(0, TCCR1B); // Ensure measurement is 0 when no echo signal is received
+TEST_ASSERT_EQUAL_UINT16(0, TCNT1); // Ensure measurement is 0 when no echo signal is received
+TEST_ASSERT_EQUAL_UINT16(0, DDRC); // Ensure measurement is 0 when no echo signal is received
+TEST_ASSERT_EQUAL_UINT16(0, DDRL); // Ensure measurement is 0 when no echo signal is received
+TEST_ASSERT_EQUAL_UINT16(0, PORTL); // Ensure measurement is 0 when no echo signal is received    
     // Call the function to test
     hc_sr04_init();
 
-    
+TEST_ASSERT_EQUAL_UINT16(0, PINL); // Ensure measurement is 0 when no echo signal is received
+TEST_ASSERT_EQUAL_UINT16(0, TCCR1B); // Ensure measurement is 0 when no echo signal is received
+TEST_ASSERT_EQUAL_UINT16(0, TCNT1); // Ensure measurement is 0 when no echo signal is received
+TEST_ASSERT_EQUAL_UINT16(0, DDRC); // Ensure measurement is 0 when no echo signal is received
+TEST_ASSERT_EQUAL_UINT16(128, DDRL); // Ensure measurement is 0 when no echo signal is received
+TEST_ASSERT_EQUAL_UINT16(0, PORTL); // Ensure measurement is 0 when no echo signal is received
+
+   
 
 TEST_ASSERT_EQUAL_UINT16(128, DDRL); // Ensure measurement is 0 when no echo signal is received
     // Verify that the relevant data direction registers are set correctly
@@ -38,6 +49,7 @@ TEST_ASSERT_EQUAL_UINT16(128, DDRL); // Ensure measurement is 0 when no echo sig
 
 void test_hc_sr04_takeMeasurement(void) {
     // Call the function to test
+    TEST_ASSERT_EQUAL_UINT16(0, PORTL); // Ensure measurement is 0 when no echo signal is received
 
     hc_sr04_toggle(true);
 
