@@ -24,74 +24,54 @@ void setup() {
   // pinMode(buttonPin, INPUT_PULLUP);  // Set button pin as input with pull-up resistor
 }
 
-// char* runAndCycle() {
-//   // Implement your logic here
-//   // Example:
-//   uint32_t watered = smart_pot_tryWater();
-//   uint32_t moisture = smart_pot_getMoisture();
-//   uint32_t waterLevel = smart_pot_getWaterLevel();
+static int moisture_tingeling = 20;
 
-//   // Assuming you have a character array declared within the function
-//   char result[50];  // Adjust the size as needed
-//   // Populate the result array with data or messages
-//   sprintf(result, "Watered: %d, Moisture: %d, Water Level: %d", watered, moisture, waterLevel);
-
-//   // Return a pointer to the result array
-//   return result;
-// }
-
-void runAndUart() {
+void cycle() {
   uint8_t watered = smart_pot_tryWater();
   uint8_t moisture = smart_pot_getMoisture();
   uint8_t waterLevel = smart_pot_getWaterLevel();
 
-  // Assuming you have a character array declared within the function
-  char result[128]; // Adjust the size as needed
-  // Populate the result array with data or messages
+  // Alert if low on water
+  if (waterLevel <= 25) {
+    smart_pot_playBuzzer(SMART_POT_SONG_LOW_WATER_LEVEL);
+  }
+
+  // Start watering and alert
+  if (moisture <= moisture_tingeling) {
+    smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
+    smart_pot_tryWater();
+  }
+
+
+  // Send the data to the serial monitor
+  char result[128];
   sprintf(result, "Watered: %d, Moisture: %d, Water Level: %d\n", watered, moisture, waterLevel);
-  // sprintf(result, "Moisture: %d, Water Level: %d\n", moisture, waterLevel);
   uartSend(result);
 }
-
-// int main() {
-//   uartInit(9600);
-//   wifi_init();
-//   smart_pot_init();
-
-//   while (1) {
-//     loop();
-//   }
-
-//   return 0;
-// }
 
 void loop() {
   unsigned long currentMillis = millis(); // Get the current time
 
   // Check if it's time to run the method
   if (currentMillis - previousMillis >= interval) {
-    // Calculate the actual elapsed time
-    // unsigned long elapsedTime = currentMillis - previousMillis;
-    
     // Update the previous time to the current time
     previousMillis = currentMillis;
     
     // Increment the counter
     counter++;
-
-    runAndUart();
-    // smart_pot_playBuzzer(SONG_WATERING);
+    display_setValues(0, 0, 0, counter);
+    cycle();
   }
   intervalCounter--;
   if (intervalCounter < 0) {
     intervalCounter = 0;
   }
-  uint8_t digit1 = intervalCounter / 1000;       // Extract thousands digit
-  uint8_t digit2 = (intervalCounter / 100) % 10; // Extract hundreds digit
-  uint8_t digit3 = (intervalCounter / 10) % 10;  // Extract tens digit
-  uint8_t digit4 = intervalCounter % 10;         // Extract units digit
+  // uint8_t digit1 = intervalCounter / 1000;       // Extract thousands digit
+  // uint8_t digit2 = (intervalCounter / 100) % 10; // Extract hundreds digit
+  // uint8_t digit3 = (intervalCounter / 10) % 10;  // Extract tens digit
+  // uint8_t digit4 = intervalCounter % 10;         // Extract units digit
 
-  display_setValues(digit1, digit2, digit3, digit4);
+  // display_setValues(digit1, digit2, digit3, digit4);
 
   if (buttons_1_pressed() && buttons_2_pressed()) {
     smart_pot_playBuzzer(SMART_POT_SONG_LOW_WATER_LEVEL);
@@ -102,8 +82,9 @@ void loop() {
     // wifi_command_TCP_transmit(message, strlen(message));
     // _delay_ms(2000);
     // smart_pot_playBuzzer(SMART_POT_SONG_MOISTURE);
-    interval = 5000;
-    intervalCounter = 5000;
+    // interval = 5000;
+    // intervalCounter = 5000;
+    smart_pot_calibrateWaterTank();
     // EEPROM_write(100, 24);
   }
   if (buttons_2_pressed()) {
@@ -132,20 +113,3 @@ void loop() {
     // uartSend(result);
   }
 }
-
-// void runAndCycle() {
-//   // uint32_t watered = smart_pot_tryWater();
-//   uint8_t watered = 8;
-//   uint32_t moisture = smart_pot_getMoisture();
-//   uint32_t waterLevel = smart_pot_getWaterLevel();
-
-//   // Assuming you have a character array declared within the function
-//   char result[50];
-//   // Populate the result array with data or messages
-//   sprintf(result, "Watered: %d, Moisture: %d, Water Level: %d", watered, moisture, waterLevel);
-
-//   // Return a pointer to the result array
-//   return result;
-// }
-
-
