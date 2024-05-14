@@ -1,7 +1,6 @@
 #include "pump.h"
 #include "includes.h"
 #include <stdio.h>
-#include "../../src/uart.h"
 
 void pump_init() {
   DDRC |= (1 << PUMP_OUTPUT_PIN); // Set PC1 as an output
