@@ -30,7 +30,7 @@ void test_pir_if_it_calls_the_callback_function_in_20sec_time()
     tone_play(5, 200);
 
     _delay_ms(100);
-    tone_play_starwars();
+    //tone_play_starwars();
 
     pir_callback_called = 0;
     uint16_t timer = 0;

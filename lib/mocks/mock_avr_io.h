@@ -1,6 +1,13 @@
 #pragma once
 #include <stdint.h>
 
+extern uint8_t EECR;
+extern uint8_t EEPE;
+extern uint8_t EEAR;
+extern uint8_t EEDR;
+extern uint8_t EEMPE;
+extern uint8_t EERE;
+
 void cli(void);
 void sei(void );
 #define PB7 7
