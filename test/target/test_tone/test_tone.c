@@ -20,7 +20,7 @@ void pir_callback_func()
     pir_callback_called = 1;
 }
 
-void test_pir_if_it_calls_the_callback_function_in_20sec_time()
+void test_pir_if_it_calls_the_callback_function_in_20sec_time_after_activating_tone()
 {
     pir_init(pir_callback_func);
     tone_init();
@@ -55,8 +55,8 @@ int main(void)
 {
     UNITY_BEGIN();
 
-    //TEST_MESSAGE("INFO! wave your hand above the pir sensor after starwars       :1:_:PASS\n"); // no : in the message
-    RUN_TEST(test_pir_if_it_calls_the_callback_function_in_20sec_time);
+    TEST_MESSAGE("INFO! wave your hand above the pir sensor after the tone plays       :1:_:PASS\n"); // no : in the message
+    RUN_TEST(test_pir_if_it_calls_the_callback_function_in_20sec_time_after_activating_tone);
 
     return UNITY_END();
 }
