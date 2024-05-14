@@ -39,4 +39,3 @@ if __name__ == "__main__":
       exit(1)
 
   flash_firmware(connected_devices)
-  os.system('pause')
