@@ -45,8 +45,8 @@ uint16_t moisture_read() {
   
   // Wait for the conversion to complete
   // ADSC WILL READ AS ONE WHILE CONVERSION IS IN PROGRESS
-    uint32_t timeout_counter = 0;
-    while (ADCSRA & (1 << ADSC)) {
+  uint32_t timeout_counter = 0;
+  while (ADCSRA & (1 << ADSC)) {
     // Check if the timeout counter has exceeded a certain threshold
     if (++timeout_counter > 100) {
       break;

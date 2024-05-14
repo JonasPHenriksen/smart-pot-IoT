@@ -14,8 +14,8 @@
  * @brief DHT11 Error messages.
  */
 typedef enum{
-    DHT11_OK,                         /**< Command successful. */
-    DHT11_FAIL,                       /**< General failure or operation not successful. */
+  DHT11_OK,                         /**< Command successful. */
+  DHT11_FAIL,                       /**< General failure or operation not successful. */
 } DHT11_ERROR_MESSAGE_t;
 
 /**
@@ -47,6 +47,5 @@ typedef enum{
  * @endcode
  */
 DHT11_ERROR_MESSAGE_t dht11_get(uint8_t* humidity_integer, uint8_t*  humidity_decimal, uint8_t* temperature_integer, uint8_t* temperature_decimal);
-
 
 void dht11_init();

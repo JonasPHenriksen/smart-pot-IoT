@@ -16,10 +16,10 @@
  * 
  */
 typedef enum {
-    USART_0,    /**< USART module 0 */
-    USART_1,    /**< USART module 1 */
-    USART_2,    /**< USART module 2 */
-    USART_3     /**< USART module 3 */
+  USART_0,    /**< USART module 0 */
+  USART_1,    /**< USART module 1 */
+  USART_2,    /**< USART module 2 */
+  USART_3     /**< USART module 3 */
 } USART_t;
 
 /**
@@ -53,7 +53,7 @@ void uart_send_blocking(USART_t usart,uint8_t data);
  * @param str Pointer to the array of data to send.
  * @param len Length of the data to send.
  */
-void uart_send_array_nonBlocking(USART_t usart,  uint8_t *str, uint16_t len);
+void uart_send_array_non_blocking(USART_t usart,  uint8_t *str, uint16_t len);
 
 /**
  * @brief Send an array of data over UART using blocking method.

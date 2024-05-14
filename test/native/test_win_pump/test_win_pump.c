@@ -24,17 +24,17 @@ void test_correct_pump_driver_initialization() {
 
     pump_init();
 
-    TEST_ASSERT_TRUE(DDRC & (1 << OUTPUT_PIN));
+    TEST_ASSERT_TRUE(DDRC & (1 << PUMP_OUTPUT_PIN));
 }
 
 
 void test_pump_driver_run() {
 
     pump_on();
-    TEST_ASSERT_TRUE(PORTC & (1 << OUTPUT_PIN)); // Verify pin is set high
+    TEST_ASSERT_TRUE(PORTC & (1 << PUMP_OUTPUT_PIN)); // Verify pin is set high
 
     pump_off();
-    TEST_ASSERT_FALSE(PORTC & (1 << OUTPUT_PIN)); // Verify pin is set low after delay
+    TEST_ASSERT_FALSE(PORTC & (1 << PUMP_OUTPUT_PIN)); // Verify pin is set low after delay
 }
 
 
