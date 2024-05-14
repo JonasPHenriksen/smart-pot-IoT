@@ -1,5 +1,5 @@
 #include "smart_pot.h"
-#include "uart.h"
+#include "monitor.h"
 
 #define SMARTPOT_WATER_AMOUNT_ADDR 2001
 #define SMARTPOT_MOISTURE_LEVEL_ADDR 2002
