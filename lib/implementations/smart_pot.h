@@ -19,3 +19,11 @@ uint8_t smart_pot_getMoisture();
 uint8_t smart_pot_getWaterLevel();
 uint16_t smart_pot_calibrateWaterTank();
 int percentage(int value, int ceiling);
+
+
+extern uint8_t waterAmount;
+extern uint8_t waterLevelPercentage;
+extern uint8_t moistureLevel;
+extern uint16_t waterTankBottom;
+extern uint8_t machineGen;
+extern uint32_t machineId;

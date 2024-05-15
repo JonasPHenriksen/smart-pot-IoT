@@ -19,12 +19,12 @@
 #define SMARTPOT_MIN_WATERING_WATER_LEVEL_PERCENTAGE 5
 #define SMARTPOT_LOW_WATER_LEVEL_PERCENTAGE 25
 
-static uint8_t waterAmount;
-static uint8_t waterLevelPercentage;
-static uint8_t moistureLevel;
-static uint16_t waterTankBottom;
-static uint8_t machineGen;
-static uint32_t machineId;
+uint8_t waterAmount;
+uint8_t waterLevelPercentage;
+uint8_t moistureLevel;
+uint16_t waterTankBottom;
+uint8_t machineGen;
+uint32_t machineId;
 
 void smart_pot_init() {
   moisture_init();
