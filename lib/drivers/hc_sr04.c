@@ -1,7 +1,6 @@
 #include "includes.h"
 #include <stdbool.h>
 #include <inttypes.h>
-#include "hc_sr04.h"
 
 //Vcc
 //#define DDR_Vcc DDRC

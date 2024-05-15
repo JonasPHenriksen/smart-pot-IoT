@@ -1,5 +1,15 @@
 #include "smart_pot.h"
+
+// DRIVERS
+#include "tone.h"
+#include "light.h"
+#include "moisture.h"
+#include "hc_sr04.h"
+#include "pump.h"
+
+// UTILS
 #include "monitor.h"
+#include "EEPROM_prompter.h"
 
 #define SMARTPOT_WATER_AMOUNT_ADDR 2001
 #define SMARTPOT_MOISTURE_LEVEL_ADDR 2002
@@ -19,8 +29,6 @@ static uint32_t machineId;
 void smart_pot_init() {
   moisture_init();
   hc_sr04_init();
-  display_init();
-  buttons_init();
   tone_init();
   pump_init();
 

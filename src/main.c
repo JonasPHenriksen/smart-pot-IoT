@@ -4,6 +4,8 @@
 #include <Arduino.h>
 #include <util/delay.h>
 
+#include "buttons.h"
+#include "display.h"
 #include "wifi.h"
 #include "monitor.h"
 #include "smart_pot.h"
@@ -38,6 +40,8 @@ void callback() {
 void setup() {
   monitor_init(9600);
   wifi_init();
+  display_init();
+  buttons_init();
   smart_pot_init();
   wifi_command_join_AP("YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
   wifi_command_create_TCP_connection("13.53.174.85", 11000, &callback, messageBuffer);
