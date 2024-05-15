@@ -25,8 +25,8 @@ uint8_t receivedResponse = false;
 void cycle() {
   receivedResponse = false;
 
-  uint8_t watered = smart_pot_tryWater();
   uint8_t moisture = smart_pot_getMoisture();
+  uint8_t watered = smart_pot_tryWater(moisture);
   uint8_t waterLevel = smart_pot_getWaterLevel();
 
   // Send the data to the serial monitor
@@ -116,14 +116,9 @@ void setup() {
   smart_pot_init();
   //wifi_command_join_AP("YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
   // wifi_command_create_TCP_connection("13.53.174.85", 11000, &callback, messageBuffer);
-<<<<<<< Updated upstream
-  //wifi_command_create_TCP_connection("192.168.43.221", 23, &callback, messageBuffer);
-  
-=======
+
   // wifi_command_create_TCP_connection("192.168.43.221", 23, &callback, messageBuffer); 
   wifi_command_create_TCP_connection("192.168.43.227", 23, &callback, messageBuffer); 
-
->>>>>>> Stashed changes
 }
 
 void loop() {
@@ -157,15 +152,10 @@ void loop() {
     smart_pot_calibrateWaterTank();
   }
   if (buttons_2_pressed()) {
-<<<<<<< Updated upstream
     aes_toggle = 1;
-      
-=======
-    // smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
->>>>>>> Stashed changes
   }
   if (buttons_3_pressed()) {
-      aes_toggle = 0;
+    aes_toggle = 0;
   }
    if (buttons_2_pressed() && buttons_3_pressed()) {
      smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
