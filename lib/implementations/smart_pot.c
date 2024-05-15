@@ -60,9 +60,8 @@ void smart_pot_set_state(uint8_t enable){
 }
 
 
-uint8_t smart_pot_tryWater() {
+uint8_t smart_pot_tryWater(uint8_t moisture) {
   if (enableState == 1) {
-    uint8_t moisture = smart_pot_getMoisture();
     if (
       (moisture < moistureLevel) && 
       (waterLevelPercentage > SMARTPOT_MIN_WATERING_WATER_LEVEL_PERCENTAGE)
