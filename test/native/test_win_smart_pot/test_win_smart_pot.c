@@ -31,14 +31,15 @@ extern uint32_t machineId;
 
 void setUp(void)
 {
+    
     RESET_FAKE(_delay_ms);
     RESET_FAKE(moisture_init);
     RESET_FAKE(hc_sr04_init);
     RESET_FAKE(tone_init);
     RESET_FAKE(pump_init);
-    RESET_FAKE(EEPROM_write)
-    RESET_FAKE(EEPROM_read_uint16)
-    RESET_FAKE(EEPROM_read_uint8)
+    RESET_FAKE(EEPROM_write);
+    RESET_FAKE(EEPROM_read_uint16);
+    RESET_FAKE(EEPROM_read_uint8);
     FFF_RESET_HISTORY();
 }
 
@@ -108,6 +109,30 @@ void test_smart_pot_tryWater() {
 
 }
 
+
+void test_smart_pot_getWaterLevel() {
+    
+    moistureLevel = 0;
+    waterLevelPercentage = 0;
+    waterAmount = 0;
+    
+    waterTankBottom = 24;
+    TEST_ASSERT_EQUAL_UINT8(9,smart_pot_getWaterLevel());
+
+    hc_sr04_takeMeasurement_fake.return_val = -50; 
+    TEST_ASSERT_EQUAL_UINT8(29,smart_pot_getWaterLevel());
+
+    hc_sr04_takeMeasurement_fake.return_val = 50; 
+    TEST_ASSERT_EQUAL_UINT8(92,smart_pot_getWaterLevel());
+
+    waterTankBottom = -24;
+    TEST_ASSERT_EQUAL_UINT8(88,smart_pot_getWaterLevel());
+
+    hc_sr04_takeMeasurement_fake.return_val = -50; 
+    TEST_ASSERT_EQUAL_UINT8(88,smart_pot_getWaterLevel());
+
+}
+
 void test_smart_pot_getMoisture() {
     TEST_ASSERT_EQUAL(1, moisture_read_fake.call_count);
     TEST_ASSERT_EQUAL_UINT8(100, smart_pot_getMoisture());
@@ -137,6 +162,7 @@ int main(void)
     RUN_TEST(test_set_pot_moisterLevel);
     RUN_TEST(test_smart_pot_tryWater);
     RUN_TEST(test_smart_pot_percentage);
+    RUN_TEST(test_smart_pot_getWaterLevel);
 
 
     // End the tests
