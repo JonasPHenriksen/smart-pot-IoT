@@ -9,14 +9,18 @@
 #include "smart_pot.h"
 #include "EEPROM_prompter.h"
 #include "JsonConvert.h"
+#include <stdbool.h>
+#include "aes_encrypt.h"
 
 unsigned long previousMillis = 0;
 unsigned long currentMillis = 0;
 unsigned long interval = 3 * 1000;
 unsigned long counter = 0;
+bool aes_toggle = 0;
 
 unsigned long requestTimeout = 5 * 1000;
 uint8_t receivedResponse = false;
+
 
 void cycle() {
   receivedResponse = false;
@@ -40,8 +44,34 @@ void cycle() {
 
   const char* values[] = {"999",waterTankLevel, measuredSoilMoisture, amountOfWatering};
   char* jsonString = rawDatasToJSONString(4, keys, values);
-  wifi_command_TCP_transmit(jsonString, strlen(jsonString));
-  free(jsonString);
+
+  if (aes_toggle == 1)
+    {
+    monitor_send("\n");
+    encrypt_data(key, (uint8_t*)jsonString, strlen(jsonString));
+    monitor_send(jsonString);
+    monitor_send("\n");
+
+    print_hex("Encrypted Hex", (uint8_t*)jsonString, strlen(jsonString));
+    monitor_send("\n");
+
+    decrypt_data(key, (uint8_t*)jsonString, strlen(jsonString));
+    monitor_send(jsonString);
+    monitor_send("\n");
+
+      free(jsonString);
+    }
+  else 
+    {
+      //wifi_command_TCP_transmit(jsonString, strlen(jsonString));
+        monitor_send("Regular \n");
+        monitor_send(jsonString);
+        monitor_send("\n");
+      free(jsonString);
+    }
+ 
+
+
 }
 
 char messageBuffer[256];
@@ -78,11 +108,11 @@ void callback() {
 
 void setup() {
   monitor_init(9600);
-  wifi_init();
+  //wifi_init();
   smart_pot_init();
-  wifi_command_join_AP("YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
+  //wifi_command_join_AP("YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
   // wifi_command_create_TCP_connection("13.53.174.85", 11000, &callback, messageBuffer);
-  wifi_command_create_TCP_connection("192.168.43.221", 23, &callback, messageBuffer);
+  //wifi_command_create_TCP_connection("192.168.43.221", 23, &callback, messageBuffer);
   
 }
 
@@ -117,9 +147,13 @@ void loop() {
     smart_pot_calibrateWaterTank();
   }
   if (buttons_2_pressed()) {
-    smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
+    aes_toggle = 1;
+      
   }
   if (buttons_3_pressed()) {
-    
+      aes_toggle = 0;
+  }
+   if (buttons_2_pressed() && buttons_3_pressed()) {
+     smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
   }
 }
