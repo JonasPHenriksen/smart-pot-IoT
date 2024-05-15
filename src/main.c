@@ -42,7 +42,7 @@ void cycle() {
   sprintf(waterTankLevel, "%d", waterLevel);
   sprintf(measuredSoilMoisture, "%d", moisture);
 
-  const char* values[] = {"999",waterTankLevel, measuredSoilMoisture, amountOfWatering};
+  const char* values[] = {"777",waterTankLevel, measuredSoilMoisture, amountOfWatering};
   char* jsonString = rawDatasToJSONString(4, keys, values);
 
   if (aes_toggle == 1)
@@ -83,7 +83,7 @@ void callback() {
   }
 
   cJSON *machine = cJSON_GetObjectItemCaseSensitive(result, "MachineID");
-  if (strcmp(machine->valuestring, "999") != 0) {
+  if (strcmp(machine->valuestring, "777") != 0) {
     return;
   }
 
@@ -93,13 +93,17 @@ void callback() {
   cJSON *waterAmount = cJSON_GetObjectItemCaseSensitive(result, "AmountOfWaterToBeGiven");
   smart_pot_setWaterAmount(waterAmount->valueint);
 
+  cJSON *enable = cJSON_GetObjectItemCaseSensitive(result, "Enable");
+  smart_pot_set_state(enable -> valueint);
+
   char buffington[300];
   sprintf(
     buffington, 
-    "----- RECEIVED RESPONSE -----\n - ID: %s\n - Moisture: %d\n - Water Amount: %d\n", 
+    "----- RECEIVED RESPONSE -----\n - ID: %s\n - Moisture: %d\n - Water Amount: %d\n - Enable: %d\n", 
     machine->valuestring, 
     moisture->valueint,
-    waterAmount->valueint
+    waterAmount->valueint,
+    enable->valueint
   );
   monitor_send(buffington);
 
@@ -112,8 +116,14 @@ void setup() {
   smart_pot_init();
   //wifi_command_join_AP("YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
   // wifi_command_create_TCP_connection("13.53.174.85", 11000, &callback, messageBuffer);
+<<<<<<< Updated upstream
   //wifi_command_create_TCP_connection("192.168.43.221", 23, &callback, messageBuffer);
   
+=======
+  // wifi_command_create_TCP_connection("192.168.43.221", 23, &callback, messageBuffer); 
+  wifi_command_create_TCP_connection("192.168.43.227", 23, &callback, messageBuffer); 
+
+>>>>>>> Stashed changes
 }
 
 void loop() {
@@ -140,15 +150,19 @@ void loop() {
   }
   
   if (buttons_1_pressed() && buttons_2_pressed()) {
-    smart_pot_playBuzzer(SMART_POT_SONG_LOW_WATER_LEVEL);
+    // smart_pot_playBuzzer(SMART_POT_SONG_LOW_WATER_LEVEL);
     return;
   }
   if (buttons_1_pressed()) {
     smart_pot_calibrateWaterTank();
   }
   if (buttons_2_pressed()) {
+<<<<<<< Updated upstream
     aes_toggle = 1;
       
+=======
+    // smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
+>>>>>>> Stashed changes
   }
   if (buttons_3_pressed()) {
       aes_toggle = 0;
