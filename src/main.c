@@ -92,7 +92,7 @@ void callback() {
   smart_pot_setWaterAmount(waterAmount->valueint);
 
   cJSON *enable = cJSON_GetObjectItemCaseSensitive(result, "Enable");
-  smart_pot_set_state(enable -> valueint);
+  smart_pot_setState(enable -> valueint);
 
   char buffington[300];
   sprintf(
