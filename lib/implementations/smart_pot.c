@@ -19,10 +19,9 @@ static uint32_t machineId;
 static uint8_t enableState;
 
 void smart_pot_init() {
+  indicator_init();
   moisture_init();
   hc_sr04_init();
-  display_init();
-  buttons_init();
   tone_init();
   pump_init();
 
@@ -45,33 +44,25 @@ void smart_pot_setMoistLevel(uint8_t moist) {
   EEPROM_write(SMARTPOT_MOISTURE_LEVEL_ADDR, moist);
 }
 
-
 void smart_pot_set_state(uint8_t enable){
-  // if (enable == 1) {
-  //   EEPROM_write(SMARTPOT_ENABLE_STATE_ADDR, 1); //set to 1, as in true
-  //   enableState = EEPROM_read_uint8(SMARTPOT_ENABLE_STATE_ADDR);
-  // }
-  // else {
-  //   EEPROM_write(SMARTPOT_ENABLE_STATE_ADDR, 1); //set to 1, as in true
-  //   enableState = EEPROM_read_uint8(SMARTPOT_ENABLE_STATE_ADDR);
-  // }
   EEPROM_write(SMARTPOT_ENABLE_STATE_ADDR, enable % 2); 
   enableState = EEPROM_read_uint8(SMARTPOT_ENABLE_STATE_ADDR);
 }
 
 
 uint8_t smart_pot_tryWater(uint8_t moisture) {
-  if (enableState == 1) {
-    if (
-      (moisture < moistureLevel) && 
-      (waterLevelPercentage > SMARTPOT_MIN_WATERING_WATER_LEVEL_PERCENTAGE)
-    ) {
-      smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
-      pump_run(waterAmount);
-      return waterAmount;
-    }
+  if (enableState != 1) {
+    return 0;
   }
-  return 0;
+
+  if (
+    (moisture < moistureLevel) && 
+    (waterLevelPercentage > SMARTPOT_MIN_WATERING_WATER_LEVEL_PERCENTAGE)
+  ) {
+    smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
+    pump_run(waterAmount);
+    return waterAmount;
+  }
 }
 
 uint8_t smart_pot_getWaterLevel() {
@@ -88,12 +79,15 @@ uint8_t smart_pot_getWaterLevel() {
 
   if (waterLevelPercentage <= SMARTPOT_LOW_WATER_LEVEL_PERCENTAGE) {
     smart_pot_playBuzzer(SMART_POT_SONG_LOW_WATER_LEVEL);
+    indicator_on();
+  } else {
+    indicator_off();
   }
 
   return waterLevelPercentage;
 }
 
-uint16_t smart_pot_calibrateWaterTank() {
+void smart_pot_calibrateWaterTank() {
   waterTankBottom = hc_sr04_takeMeasurement(); 
 
   unsigned char byte1 = (waterTankBottom >> 8) & 0xFF; // Extract the first byte

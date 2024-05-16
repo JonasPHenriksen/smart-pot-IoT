@@ -36,10 +36,15 @@ void moisture_init() {
     ADEN - Enables ADC
 
   */
-
+  DDRC |= (1 << MOISTURE_OUTPUT_PIN); // Set PC0 as an output
 }
 
 uint16_t moisture_read() {
+  // Set port to HIGH
+  PORTC |= (1 << MOISTURE_OUTPUT_PIN);
+
+  _delay_ms(10);
+
   // Start the ADC conversion
   ADCSRA |= (1 << ADSC);
   
@@ -57,5 +62,8 @@ uint16_t moisture_read() {
   // ADD THE LOW BYTE AND HIGH BYTE (SHIFT POSITION BY 8 TO LEFT)
   uint16_t adc_value = ADCL;
   adc_value |= (ADCH << 8);
+
+  // Set port to LOW
+  PORTC &= ~(1 << MOISTURE_OUTPUT_PIN); 
   return adc_value;
 }
