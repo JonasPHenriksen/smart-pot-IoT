@@ -26,6 +26,12 @@ void tearDown(void) {}
 
 void test_correct_moisture_driver_initialization()
 {
+    
+    TEST_ASSERT_EQUAL(0, ADMUX);
+    TEST_ASSERT_EQUAL(0, ADCSRA);
+    TEST_ASSERT_EQUAL(0, ADCSRB);
+    TEST_ASSERT_EQUAL(0, ADMUX);
+    TEST_ASSERT_EQUAL(0, DIDR2);
 
     moisture_init();
 
@@ -40,6 +46,7 @@ void test_correct_moisture_driver_initialization()
 
 void test_moisture_driver_read()
 {
+    TEST_ASSERT_EQUAL_UINT8(128, ADCSRA);
 
     uint8_t moistureLevel = moisture_read();
 

@@ -26,6 +26,9 @@ void tearDown(void) {}
 
 void test_light_init()
 {
+  TEST_ASSERT_EQUAL(0,ADMUX);
+  TEST_ASSERT_EQUAL(0,ADCSRA);
+  TEST_ASSERT_EQUAL(0,DIDR2);
 
     light_init();
 
@@ -36,7 +39,8 @@ void test_light_init()
 
 void test_light_read()
 {
-
+  TEST_ASSERT_EQUAL(135,ADCSRA);
+  
   light_read();
 
   TEST_ASSERT_EQUAL(199,ADCSRA);
