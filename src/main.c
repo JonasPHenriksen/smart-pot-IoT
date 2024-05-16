@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <Arduino.h>
 #include <util/delay.h>
 
@@ -11,7 +12,6 @@
 #include "display.h"
 #include "EEPROM_prompter.h"
 #include "JsonConvert.h"
-#include <stdbool.h>
 #include "aes_encrypt.h"
 
 unsigned long previousMillis = 0;

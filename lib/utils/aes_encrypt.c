@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h> 
 #include "aes_encrypt.h"
-#include <AESLib.h>
 
 #define AES_BLOCK_SIZE 16
 
