@@ -72,7 +72,7 @@ uint8_t smart_pot_tryWater(uint8_t moisture) {
     (moisture < moistureLevel) && 
     (waterLevelPercentage > SMARTPOT_MIN_WATERING_WATER_LEVEL_PERCENTAGE)
   ) {
-    // smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
+    smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
     pump_run(waterAmount);
     return waterAmount;
   } else {
@@ -82,7 +82,7 @@ uint8_t smart_pot_tryWater(uint8_t moisture) {
 
 uint8_t smart_pot_getWaterLevel() {
   // 30 + 50 mm
-  uint8_t waterLevel = hc_sr04_takeMeasurement() - 30;
+  uint16_t waterLevel = hc_sr04_takeMeasurement() - 30;
   uint8_t limit = waterTankBottom - 30;
   if (waterLevel < 0) {
     waterLevel = 0;
