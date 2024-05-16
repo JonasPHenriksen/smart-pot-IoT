@@ -7,6 +7,8 @@
 #include "wifi.h"
 #include "monitor.h"
 #include "smart_pot.h"
+#include "buttons.h"
+#include "display.h"
 #include "EEPROM_prompter.h"
 #include "JsonConvert.h"
 #include <stdbool.h>
@@ -45,8 +47,7 @@ void cycle() {
   const char* values[] = {"777",waterTankLevel, measuredSoilMoisture, amountOfWatering};
   char* jsonString = rawDatasToJSONString(4, keys, values);
 
-  if (aes_toggle == 1)
-    {
+  if (aes_toggle == 1) {
     monitor_send("\n");
     encrypt_data(key, (uint8_t*)jsonString, strlen(jsonString));
     monitor_send(jsonString);
@@ -59,19 +60,14 @@ void cycle() {
     monitor_send(jsonString);
     monitor_send("\n");
 
-      free(jsonString);
-    }
-  else 
-    {
-      //wifi_command_TCP_transmit(jsonString, strlen(jsonString));
-        monitor_send("Regular \n");
-        monitor_send(jsonString);
-        monitor_send("\n");
-      free(jsonString);
-    }
- 
-
-
+    free(jsonString);
+  } else {
+    //wifi_command_TCP_transmit(jsonString, strlen(jsonString));
+      // monitor_send("Regular \n");
+      monitor_send(jsonString);
+      // monitor_send("\n");
+    free(jsonString);
+  }
 }
 
 char messageBuffer[256];
@@ -112,6 +108,8 @@ void callback() {
 
 void setup() {
   monitor_init(9600);
+  display_init();
+  buttons_init();
   //wifi_init();
   smart_pot_init();
   //wifi_command_join_AP("YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
