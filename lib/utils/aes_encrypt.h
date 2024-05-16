@@ -3,6 +3,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h> 
+#ifndef WINDOWS_TEST
+#include <AESLib.h>
+#endif
+
 
 extern uint8_t key[16];
 
