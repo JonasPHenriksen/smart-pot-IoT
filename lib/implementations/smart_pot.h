@@ -17,7 +17,7 @@ void smart_pot_setWaterAmount(uint8_t water);
 uint8_t smart_pot_tryWater();
 uint8_t smart_pot_getMoisture();
 uint8_t smart_pot_getWaterLevel();
-uint16_t smart_pot_calibrateWaterTank();
+void smart_pot_calibrateWaterTank();
 int percentage(int value, int ceiling);
 
 

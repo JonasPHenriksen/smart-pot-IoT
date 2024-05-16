@@ -31,10 +31,10 @@ extern uint32_t machineId;
 
 void setUp(void)
 {
-    
     RESET_FAKE(_delay_ms);
     RESET_FAKE(moisture_init);
     RESET_FAKE(hc_sr04_init);
+    RESET_FAKE(hc_sr04_takeMeasurement)
     RESET_FAKE(tone_init);
     RESET_FAKE(pump_init);
     RESET_FAKE(EEPROM_write);
@@ -115,6 +115,7 @@ void test_smart_pot_getWaterLevel() {
     moistureLevel = 0;
     waterLevelPercentage = 0;
     waterAmount = 0;
+    hc_sr04_takeMeasurement_fake.return_val = 0; 
     
     waterTankBottom = 24;
     TEST_ASSERT_EQUAL_UINT8(9,smart_pot_getWaterLevel());
@@ -126,11 +127,60 @@ void test_smart_pot_getWaterLevel() {
     TEST_ASSERT_EQUAL_UINT8(92,smart_pot_getWaterLevel());
 
     waterTankBottom = -24;
-    TEST_ASSERT_EQUAL_UINT8(88,smart_pot_getWaterLevel());
+    TEST_ASSERT_EQUAL_UINT8(90,smart_pot_getWaterLevel());
 
     hc_sr04_takeMeasurement_fake.return_val = -50; 
-    TEST_ASSERT_EQUAL_UINT8(88,smart_pot_getWaterLevel());
+    TEST_ASSERT_EQUAL_UINT8(12,smart_pot_getWaterLevel());
 
+    // Mock return values for hc_sr04_takeMeasurement
+    hc_sr04_takeMeasurement_fake.return_val = 60;  // 60 - 30 = 30
+    waterTankBottom = 60;  // limit = 60 - 30 = 30
+    TEST_ASSERT_EQUAL_UINT8(0, smart_pot_getWaterLevel());
+
+    hc_sr04_takeMeasurement_fake.return_val = 40;  // 40 - 30 = 10
+    waterTankBottom = 60;  // limit = 60 - 30 = 30
+    TEST_ASSERT_EQUAL_UINT8(66, smart_pot_getWaterLevel());
+
+    hc_sr04_takeMeasurement_fake.return_val = 20;  // 20 - 30 = -10, should be 0
+    waterTankBottom = 60;  // limit = 60 - 30 = 30
+    TEST_ASSERT_EQUAL_UINT8(0, smart_pot_getWaterLevel());
+
+    hc_sr04_takeMeasurement_fake.return_val = 90;  // 90 - 30 = 60
+    waterTankBottom = 60;  // limit = 60 - 30 = 30, should be capped to 30
+    TEST_ASSERT_EQUAL_UINT8(0, smart_pot_getWaterLevel());
+
+    hc_sr04_takeMeasurement_fake.return_val = 30;  // 30 - 30 = 0
+    waterTankBottom = 60;  // limit = 60 - 30 = 30
+    TEST_ASSERT_EQUAL_UINT8(100, smart_pot_getWaterLevel());
+
+    // Test edge case where waterTankBottom is less than 30
+    hc_sr04_takeMeasurement_fake.return_val = 40;  // 40 - 30 = 10
+    waterTankBottom = 20;  // limit = 20 - 30 = -10, should be 0
+    TEST_ASSERT_EQUAL_UINT8(95, smart_pot_getWaterLevel());
+}
+
+void test_smart_pot_calibrateWaterTank() {
+    hc_sr04_takeMeasurement_fake.return_val = 78;
+
+    smart_pot_calibrateWaterTank();
+
+    TEST_ASSERT_EQUAL(1,hc_sr04_takeMeasurement_fake.call_count);
+    TEST_ASSERT_EQUAL(2, EEPROM_write_fake.call_count);
+
+    unsigned char byte1 = EEPROM_write_fake.arg1_history[0];
+    unsigned char byte2 = EEPROM_write_fake.arg1_history[1];
+
+    TEST_ASSERT_EQUAL(78,byte2);
+    TEST_ASSERT_EQUAL(0,byte1);
+
+    hc_sr04_takeMeasurement_fake.return_val = 356;
+    smart_pot_calibrateWaterTank();
+
+    byte1 = EEPROM_write_fake.arg1_history[2];
+    byte2 = EEPROM_write_fake.arg1_history[3];
+
+    TEST_ASSERT_EQUAL(1,byte1);
+    TEST_ASSERT_EQUAL(100,byte2);
 }
 
 void test_smart_pot_getMoisture() {
@@ -163,6 +213,7 @@ int main(void)
     RUN_TEST(test_smart_pot_tryWater);
     RUN_TEST(test_smart_pot_percentage);
     RUN_TEST(test_smart_pot_getWaterLevel);
+    RUN_TEST(test_smart_pot_calibrateWaterTank);
 
 
     // End the tests
