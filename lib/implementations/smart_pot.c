@@ -14,7 +14,7 @@
 #define SMARTPOT_WATER_AMOUNT_ADDR 2001
 #define SMARTPOT_MOISTURE_LEVEL_ADDR 2002
 #define SMARTPOT_WATER_TANK_BOTTOM_ADDR1 2003
-#define SMARTPOT_WATER_TANK_BOTTOM_ADDR2 2003
+#define SMARTPOT_WATER_TANK_BOTTOM_ADDR2 2004
 
 #define SMARTPOT_MIN_WATERING_WATER_LEVEL_PERCENTAGE 5
 #define SMARTPOT_LOW_WATER_LEVEL_PERCENTAGE 25
@@ -83,7 +83,7 @@ uint8_t smart_pot_getWaterLevel() {
   return waterLevelPercentage;
 }
 
-uint16_t smart_pot_calibrateWaterTank() {
+void smart_pot_calibrateWaterTank() {
   waterTankBottom = hc_sr04_takeMeasurement(); 
 
   unsigned char byte1 = (waterTankBottom >> 8) & 0xFF; // Extract the first byte
