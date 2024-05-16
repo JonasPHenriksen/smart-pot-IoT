@@ -92,12 +92,29 @@ void test_EEPROM_address(void) {
     result = EEPROM_read_uint8(0);
 
     TEST_ASSERT_EQUAL_UINT8(7,result);
-
-
 }
 
+/*
+void test_EEPROM_read16() {
+    EEPROM_write(0,223);
+    EEPROM_write(1,224);
+    uint16_t result = EEPROM_read_uint16(0,1);
+    TEST_ASSERT_EQUAL_UINT16(57568,result);
+}
 
+void test_EEPROM_read32() {
+    EEPROM_write(0,223);
+    EEPROM_write(1,224);
+    EEPROM_write(2,255);
+    EEPROM_write(3,145);
+    uint32_t result = EEPROM_read_uint32(0,1,2,3);
+    char buffington[256];
+    sprintf(buffington, "RESULTINGTON: %d       :1:_:PASS\n", result);
+          TEST_MESSAGE(buffington);
 
+    TEST_ASSERT_EQUAL_UINT32(0,result);
+}
+*/
 
 int main(void) {
     // Initialize the FFF framework
@@ -106,6 +123,7 @@ int main(void) {
     // Run the tests
     RUN_TEST(test_EEPROM_value);
     RUN_TEST(test_EEPROM_address);
+
 
     // End the tests
     return UNITY_END();

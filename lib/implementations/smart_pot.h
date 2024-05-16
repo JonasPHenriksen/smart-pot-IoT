@@ -2,7 +2,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
-
 // DRIVERS
 #include "tone.h"
 #include "light.h"
@@ -13,7 +12,6 @@
 
 // UTILS
 #include "EEPROM_prompter.h"
-
 typedef enum {
   SMART_POT_SONG_LOW_WATER_LEVEL,
   SMART_POT_SONG_MOISTURE,
@@ -30,3 +28,12 @@ void smart_pot_calibrateWaterTank();
 uint8_t smart_pot_tryWater(uint8_t moisture);
 uint8_t smart_pot_getMoisture();
 uint8_t smart_pot_getWaterLevel();
+int percentage(int value, int ceiling);
+
+
+extern uint8_t waterAmount;
+extern uint8_t waterLevelPercentage;
+extern uint8_t moistureLevel;
+extern uint16_t waterTankBottom;
+extern uint8_t machineGen;
+extern uint32_t machineId;
