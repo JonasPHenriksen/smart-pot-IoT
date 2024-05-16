@@ -56,9 +56,10 @@ void smart_pot_setMoistLevel(uint8_t moist) {
   EEPROM_write(SMARTPOT_MOISTURE_LEVEL_ADDR, moist);
 }
 
-void smart_pot_set_state(uint8_t enable){
-  EEPROM_write(SMARTPOT_ENABLE_STATE_ADDR, enable % 2); 
-  enableState = EEPROM_read_uint8(SMARTPOT_ENABLE_STATE_ADDR);
+void smart_pot_setState(uint8_t enable){
+  enable %= 2;
+  EEPROM_write(SMARTPOT_ENABLE_STATE_ADDR, enable); 
+  enableState = enable;
 }
 
 
@@ -71,9 +72,11 @@ uint8_t smart_pot_tryWater(uint8_t moisture) {
     (moisture < moistureLevel) && 
     (waterLevelPercentage > SMARTPOT_MIN_WATERING_WATER_LEVEL_PERCENTAGE)
   ) {
-    smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
+    // smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
     pump_run(waterAmount);
     return waterAmount;
+  } else {
+    return 0;
   }
 }
 
