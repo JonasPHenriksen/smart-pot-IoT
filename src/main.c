@@ -1,28 +1,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <Arduino.h>
 #include <util/delay.h>
 
 #include "wifi.h"
 #include "monitor.h"
 #include "smart_pot.h"
+#include "buttons.h"
+#include "display.h"
 #include "EEPROM_prompter.h"
 #include "JsonConvert.h"
+#include "aes_encrypt.h"
 
 unsigned long previousMillis = 0;
 unsigned long currentMillis = 0;
 unsigned long interval = 3 * 1000;
 unsigned long counter = 0;
+bool aes_toggle = 0;
 
 unsigned long requestTimeout = 5 * 1000;
 uint8_t receivedResponse = false;
 
+
 void cycle() {
   receivedResponse = false;
 
-  uint8_t watered = smart_pot_tryWater();
   uint8_t moisture = smart_pot_getMoisture();
+  uint8_t watered = smart_pot_tryWater(moisture);
   uint8_t waterLevel = smart_pot_getWaterLevel();
 
   // Send the data to the serial monitor
@@ -38,10 +44,30 @@ void cycle() {
   sprintf(waterTankLevel, "%d", waterLevel);
   sprintf(measuredSoilMoisture, "%d", moisture);
 
-  const char* values[] = {"999",waterTankLevel, measuredSoilMoisture, amountOfWatering};
+  const char* values[] = {"777",waterTankLevel, measuredSoilMoisture, amountOfWatering};
   char* jsonString = rawDatasToJSONString(4, keys, values);
-  wifi_command_TCP_transmit(jsonString, strlen(jsonString));
-  free(jsonString);
+
+  if (aes_toggle == 1) {
+    monitor_send("\n");
+    encrypt_data(key, (uint8_t*)jsonString, strlen(jsonString));
+    monitor_send(jsonString);
+    monitor_send("\n");
+
+    print_hex("Encrypted Hex", (uint8_t*)jsonString, strlen(jsonString));
+    monitor_send("\n");
+
+    decrypt_data(key, (uint8_t*)jsonString, strlen(jsonString));
+    monitor_send(jsonString);
+    monitor_send("\n");
+
+    free(jsonString);
+  } else {
+    //wifi_command_TCP_transmit(jsonString, strlen(jsonString));
+      // monitor_send("Regular \n");
+      monitor_send(jsonString);
+      // monitor_send("\n");
+    free(jsonString);
+  }
 }
 
 char messageBuffer[256];
@@ -53,7 +79,7 @@ void callback() {
   }
 
   cJSON *machine = cJSON_GetObjectItemCaseSensitive(result, "MachineID");
-  if (strcmp(machine->valuestring, "999") != 0) {
+  if (strcmp(machine->valuestring, "777") != 0) {
     return;
   }
 
@@ -63,13 +89,17 @@ void callback() {
   cJSON *waterAmount = cJSON_GetObjectItemCaseSensitive(result, "AmountOfWaterToBeGiven");
   smart_pot_setWaterAmount(waterAmount->valueint);
 
+  cJSON *enable = cJSON_GetObjectItemCaseSensitive(result, "Enable");
+  smart_pot_set_state(enable -> valueint);
+
   char buffington[300];
   sprintf(
     buffington, 
-    "----- RECEIVED RESPONSE -----\n - ID: %s\n - Moisture: %d\n - Water Amount: %d\n", 
+    "----- RECEIVED RESPONSE -----\n - ID: %s\n - Moisture: %d\n - Water Amount: %d\n - Enable: %d\n", 
     machine->valuestring, 
     moisture->valueint,
-    waterAmount->valueint
+    waterAmount->valueint,
+    enable->valueint
   );
   monitor_send(buffington);
 
@@ -78,12 +108,15 @@ void callback() {
 
 void setup() {
   monitor_init(9600);
-  wifi_init();
+  display_init();
+  buttons_init();
+  //wifi_init();
   smart_pot_init();
-  wifi_command_join_AP("YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
+  //wifi_command_join_AP("YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
   // wifi_command_create_TCP_connection("13.53.174.85", 11000, &callback, messageBuffer);
-  wifi_command_create_TCP_connection("192.168.43.221", 23, &callback, messageBuffer);
-  
+
+  // wifi_command_create_TCP_connection("192.168.43.221", 23, &callback, messageBuffer); 
+  wifi_command_create_TCP_connection("192.168.43.227", 23, &callback, messageBuffer); 
 }
 
 void loop() {
@@ -110,16 +143,19 @@ void loop() {
   }
   
   if (buttons_1_pressed() && buttons_2_pressed()) {
-    smart_pot_playBuzzer(SMART_POT_SONG_LOW_WATER_LEVEL);
+    // smart_pot_playBuzzer(SMART_POT_SONG_LOW_WATER_LEVEL);
     return;
   }
   if (buttons_1_pressed()) {
     smart_pot_calibrateWaterTank();
   }
   if (buttons_2_pressed()) {
-    smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
+    aes_toggle = 1;
   }
   if (buttons_3_pressed()) {
-    
+    aes_toggle = 0;
+  }
+   if (buttons_2_pressed() && buttons_3_pressed()) {
+     smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
   }
 }
