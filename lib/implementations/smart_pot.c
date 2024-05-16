@@ -82,7 +82,7 @@ uint8_t smart_pot_tryWater(uint8_t moisture) {
 
 uint8_t smart_pot_getWaterLevel() {
   // 30 + 50 mm
-  uint16_t waterLevel = hc_sr04_takeMeasurement() - 30;
+  uint8_t waterLevel = hc_sr04_takeMeasurement() - 30;
   uint8_t limit = waterTankBottom - 30;
   if (waterLevel < 0) {
     waterLevel = 0;
