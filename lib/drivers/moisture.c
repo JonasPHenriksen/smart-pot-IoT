@@ -39,12 +39,20 @@ void moisture_init() {
   DDRC |= (1 << MOISTURE_OUTPUT_PIN); // Set PC0 as an output
 }
 
-uint16_t moisture_read() {
+void moisture_on() {
   // Set port to HIGH
   PORTC |= (1 << MOISTURE_OUTPUT_PIN);
-
   _delay_ms(10);
+}
 
+void mositure_off() {
+  // Set port to LOW
+  PORTC &= ~(1 << MOISTURE_OUTPUT_PIN); 
+}
+
+
+uint16_t moisture_read() {
+  moisture_on();
   // Start the ADC conversion
   ADCSRA |= (1 << ADSC);
   
@@ -63,7 +71,7 @@ uint16_t moisture_read() {
   uint16_t adc_value = ADCL;
   adc_value |= (ADCH << 8);
 
-  // Set port to LOW
-  PORTC &= ~(1 << MOISTURE_OUTPUT_PIN); 
+  mositure_off();
+
   return adc_value;
 }
