@@ -3,11 +3,9 @@
 #include "pump.h"
 #include <stdio.h>
 #include <stdint.h>
-#include <pthread.h>
 
 uint8_t DDRC;
 uint8_t PORTC;
-
 
 DEFINE_FFF_GLOBALS
 FAKE_VOID_FUNC(_delay_ms, int);

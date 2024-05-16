@@ -10,13 +10,16 @@ uint8_t ADCSRB;
 uint8_t ADCL;
 uint8_t ADCH;
 uint8_t DIDR2;
+uint8_t DDRC;
+uint8_t PORTC;
 
 DEFINE_FFF_GLOBALS
 
+FAKE_VOID_FUNC(_delay_ms, int);
 
-void setUp(void)
-{
-    FFF_RESET_HISTORY();
+void setUp(void) {
+  RESET_FAKE(_delay_ms);
+  FFF_RESET_HISTORY();
 }
 
 void tearDown(void) {}
@@ -31,6 +34,8 @@ void test_correct_moisture_driver_initialization()
     TEST_ASSERT_EQUAL(8, ADCSRB);
     TEST_ASSERT_EQUAL(65, ADMUX);
     TEST_ASSERT_EQUAL(2, DIDR2);
+    TEST_ASSERT_EQUAL(1, DDRC);
+    TEST_ASSERT_EQUAL(0, PORTC);
 }
 
 void test_moisture_driver_read()
