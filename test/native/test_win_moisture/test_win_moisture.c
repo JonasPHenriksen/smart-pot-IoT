@@ -46,12 +46,11 @@ void test_correct_moisture_driver_initialization()
 
 void test_moisture_driver_read()
 {
-    TEST_ASSERT_EQUAL_UINT8(128, ADCSRA);
+  ADCSRA = 128;
+  uint8_t moistureLevel = moisture_read();
 
-    uint8_t moistureLevel = moisture_read();
-
-    TEST_ASSERT_EQUAL_UINT8(0, moistureLevel);
-    TEST_ASSERT_EQUAL_UINT8(192, ADCSRA);
+  TEST_ASSERT_EQUAL_UINT8(0, moistureLevel);
+  TEST_ASSERT_EQUAL_UINT8(192, ADCSRA);
 }
 
 

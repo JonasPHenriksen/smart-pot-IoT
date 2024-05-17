@@ -2,6 +2,6 @@
 
 #include "cJSON.h" 
 
-cJSON* rawDataToJSON(const char* key, const char* value);
-cJSON* rawDataArrayToJSON(int numPairs, const char* keys[], const char* values[]);
-char* rawDatasToJSONString(int numPairs, const char* keys[], const char* values[]);
+cJSON* rawDataToJSON(char* key, char* value);
+cJSON* rawDataArrayToJSON(int numPairs, char* keys[], char* values[]);
+char* rawDatasToJSONString(int numPairs, char* keys[], char* values[]);
