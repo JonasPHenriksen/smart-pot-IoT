@@ -41,7 +41,7 @@ void test_aes_encrypt_encrypt_data_and_decrypt_long_charPointer() {
     uint8_t* decrypted_message = decrypt_data(key,encrypted_message,strlen(encrypted_message));
 
     TEST_ASSERT_EQUAL(7, aes128_enc_single_fake.call_count);
-    TEST_ASSERT_EQUAL(8, aes128_dec_single_fake.call_count);
+    TEST_ASSERT_EQUAL(7, aes128_dec_single_fake.call_count);
     TEST_ASSERT_EQUAL_STRING(TestString, decrypted_message);
 
     // TEST_ASSERT_EQUAL_CHAR_ARRAY_MESSAGE(Original_TestString, TestString, strlen(Original_TestString));
