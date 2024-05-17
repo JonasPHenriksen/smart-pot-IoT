@@ -3,8 +3,6 @@
 #include "unity.h"
 #include <stdint.h>
 
-#define TEST
-
 DEFINE_FFF_GLOBALS
 FAKE_VOID_FUNC(_delay_ms, int);
 FAKE_VOID_FUNC(moisture_init);
@@ -23,20 +21,26 @@ FAKE_VALUE_FUNC(uint16_t, EEPROM_read_uint16, uint16_t, uint16_t);
 FAKE_VALUE_FUNC(uint32_t, EEPROM_read_uint32, uint16_t, uint16_t, uint16_t, uint16_t);
 FAKE_VALUE_FUNC(uint16_t, moisture_read);
 FAKE_VALUE_FUNC(uint16_t, hc_sr04_takeMeasurement);
-// FAKE_VALUE_FUNC(bool, smart_pot_playBuzzer, SMART_POT_SONG_t);
-
 
 void setUp(void)
 {
     RESET_FAKE(_delay_ms);
     RESET_FAKE(moisture_init);
     RESET_FAKE(hc_sr04_init);
-    RESET_FAKE(hc_sr04_takeMeasurement)
     RESET_FAKE(tone_init);
     RESET_FAKE(pump_init);
+    RESET_FAKE(indicator_init);
+
+    RESET_FAKE(indicator_on);
+    RESET_FAKE(indicator_off);
+    RESET_FAKE(tone_play);
+    RESET_FAKE(pump_run);
     RESET_FAKE(EEPROM_write);
-    RESET_FAKE(EEPROM_read_uint16);
     RESET_FAKE(EEPROM_read_uint8);
+    RESET_FAKE(EEPROM_read_uint16);
+    RESET_FAKE(EEPROM_read_uint32);
+    RESET_FAKE(moisture_read);
+    RESET_FAKE(hc_sr04_takeMeasurement)
     FFF_RESET_HISTORY();
 }
 
@@ -45,6 +49,7 @@ void tearDown(void) {}
 void test_init_methods_are_called() {
 
     smart_pot_init();
+    TEST_ASSERT_EQUAL(1, indicator_init_fake.call_count);
     TEST_ASSERT_EQUAL(1, moisture_init_fake.call_count);
     TEST_ASSERT_EQUAL(1, hc_sr04_init_fake.call_count);
     TEST_ASSERT_EQUAL(1, tone_init_fake.call_count);
@@ -83,10 +88,13 @@ void test_set_pot_moistureLevel() {
 
     smart_pot_setMoistLevel(37);
     TEST_ASSERT_EQUAL(37, moistureLevel);
+    TEST_ASSERT_EQUAL(1, EEPROM_write_fake.call_count);
     smart_pot_setMoistLevel(-1);
     TEST_ASSERT_EQUAL(255, moistureLevel);
+    TEST_ASSERT_EQUAL(2, EEPROM_write_fake.call_count);
     smart_pot_setMoistLevel(256);
     TEST_ASSERT_EQUAL(0, moistureLevel);
+    TEST_ASSERT_EQUAL(3, EEPROM_write_fake.call_count);
     smart_pot_setMoistLevel(255);
     TEST_ASSERT_EQUAL(255, moistureLevel);
     TEST_ASSERT_EQUAL(4, EEPROM_write_fake.call_count);
@@ -96,14 +104,25 @@ void test_set_pot_state() {
   enableState = 0;
   smart_pot_setState(1);
   TEST_ASSERT_EQUAL(1, enableState);
+  TEST_ASSERT_EQUAL(1, EEPROM_write_fake.arg1_history[0]);
+  TEST_ASSERT_EQUAL(2005, EEPROM_write_fake.arg0_history[0]);
   smart_pot_setState(5);
   TEST_ASSERT_EQUAL(1, enableState);
+  TEST_ASSERT_EQUAL(1, EEPROM_write_fake.arg1_history[1]);
+  TEST_ASSERT_EQUAL(2005, EEPROM_write_fake.arg0_history[1]);
   smart_pot_setState(-4);
   TEST_ASSERT_EQUAL(0, enableState);
+  TEST_ASSERT_EQUAL(0, EEPROM_write_fake.arg1_history[2]);
+  TEST_ASSERT_EQUAL(2005, EEPROM_write_fake.arg0_history[2]);
   smart_pot_setState(255);
   TEST_ASSERT_EQUAL(1, enableState);
+  TEST_ASSERT_EQUAL(1, EEPROM_write_fake.arg1_history[3]);
+  TEST_ASSERT_EQUAL(2005, EEPROM_write_fake.arg0_history[3]);
   smart_pot_setState(-255);
   TEST_ASSERT_EQUAL(1, enableState);
+  TEST_ASSERT_EQUAL(1, EEPROM_write_fake.arg1_history[4]);
+  TEST_ASSERT_EQUAL(2005, EEPROM_write_fake.arg0_history[4]);
+  TEST_ASSERT_EQUAL(5, EEPROM_write_fake.call_count);
 }
 
 
@@ -113,35 +132,41 @@ void test_smart_pot_tryWater() {
   waterAmount = 0;
   enableState = 0;
   TEST_ASSERT_EQUAL_UINT8(0, smart_pot_tryWater(30));
-  TEST_ASSERT_EQUAL_UINT8(0, smart_pot_tryWater(255));
+  TEST_ASSERT_EQUAL_UINT8(0, smart_pot_tryWater(256));
   TEST_ASSERT_EQUAL_UINT8(0, smart_pot_tryWater(-255));
 
   enableState = 1;
-  // TEST moisture lower and higher than moistureLevel
-  TEST_ASSERT_EQUAL_UINT8(0, smart_pot_tryWater(10));
-  TEST_ASSERT_EQUAL_UINT8(0, smart_pot_tryWater(50));
-  // TEST waterLevelPercentage lower and higher than SMARTPOT_MIN_WATERING_WATER_LEVEL_PERCENTAGE
-  waterLevelPercentage = 0;
-  TEST_ASSERT_EQUAL_UINT8(0, smart_pot_tryWater(10));
+  TEST_ASSERT_EQUAL_UINT8(0, smart_pot_tryWater(10)); // MOISTURE: 10 < 30 && LEVEL: 0 > 5
+  TEST_ASSERT_EQUAL_UINT8(0, smart_pot_tryWater(50)); // MOISTURE: 50 < 30 && LEVEL: 0 > 5
   waterLevelPercentage = 10;
-  TEST_ASSERT_EQUAL_UINT8(0, smart_pot_tryWater(50));
+  TEST_ASSERT_EQUAL_UINT8(0, smart_pot_tryWater(50)); // MOISTURE: 50 < 30 && LEVEL: 10 > 5
   
   // TEST both true
   waterAmount = 5;
-  TEST_ASSERT_EQUAL_UINT8(5, smart_pot_tryWater(10));
-  // TEST_ASSERT_EQUAL_UINT8(1, smart_pot_playBuzzer_fake.call_count);
-  // TEST_ASSERT_EQUAL(SMART_POT_SONG_WATERING, smart_pot_playBuzzer_fake.arg0_history[0]);
-  // TEST_ASSERT_EQUAL(true, smart_pot_playBuzzer_fake.return_val_history[0]);
+  TEST_ASSERT_EQUAL_UINT8(5, smart_pot_tryWater(10)); // MOISTURE: 10 < 30 && LEVEL: 10 > 5
+  TEST_ASSERT_EQUAL_UINT8(2, tone_play_fake.call_count);
+  TEST_ASSERT_EQUAL_UINT16(650, tone_play_fake.arg0_history[0]);
+  TEST_ASSERT_EQUAL_UINT16(150, tone_play_fake.arg1_history[0]);
+  TEST_ASSERT_EQUAL_UINT16(800, tone_play_fake.arg0_history[1]);
+  TEST_ASSERT_EQUAL_UINT16(150, tone_play_fake.arg1_history[1]);
   TEST_ASSERT_EQUAL_UINT8(1, pump_run_fake.call_count);
   TEST_ASSERT_EQUAL_UINT8(5, pump_run_fake.arg0_history[0]);
   
   waterAmount = 255;
-  TEST_ASSERT_EQUAL_UINT8(255, smart_pot_tryWater(10));
-  // TEST_ASSERT_EQUAL_UINT8(2, smart_pot_playBuzzer_fake.call_count);
-  // TEST_ASSERT_EQUAL(SMART_POT_SONG_WATERING, smart_pot_playBuzzer_fake.arg0_history[1]);
-  // TEST_ASSERT_EQUAL(true, smart_pot_playBuzzer_fake.return_val_history[1]);
+  TEST_ASSERT_EQUAL_UINT8(255, smart_pot_tryWater(10)); // MOISTURE: 10 < 30 && LEVEL: 10 > 5
+  TEST_ASSERT_EQUAL_UINT8(4, tone_play_fake.call_count);
   TEST_ASSERT_EQUAL_UINT8(2, pump_run_fake.call_count);
   TEST_ASSERT_EQUAL_UINT8(255, pump_run_fake.arg0_history[1]);
+
+  TEST_ASSERT_EQUAL_UINT8(255, smart_pot_tryWater(256)); // MOISTURE: 0 < 30 && LEVEL: 10 > 5
+  TEST_ASSERT_EQUAL_UINT8(6, tone_play_fake.call_count);
+  TEST_ASSERT_EQUAL_UINT8(3, pump_run_fake.call_count);
+  TEST_ASSERT_EQUAL_UINT8(255, pump_run_fake.arg0_history[2]);
+  
+  TEST_ASSERT_EQUAL_UINT8(255, smart_pot_tryWater(-255)); // MOISTURE: 1 < 30 && LEVEL: 10 > 5
+  TEST_ASSERT_EQUAL_UINT8(8, tone_play_fake.call_count);
+  TEST_ASSERT_EQUAL_UINT8(4, pump_run_fake.call_count);
+  TEST_ASSERT_EQUAL_UINT8(255, pump_run_fake.arg0_history[3]);
 }
 
 
@@ -154,44 +179,64 @@ void test_smart_pot_getWaterLevel() {
     
     waterTankBottom = 24;
     TEST_ASSERT_EQUAL_UINT8(9,smart_pot_getWaterLevel());
+    TEST_ASSERT_EQUAL_UINT8(1, indicator_on_fake.call_count);
+    TEST_ASSERT_EQUAL_UINT8(2, tone_play_fake.call_count);
+    TEST_ASSERT_EQUAL_UINT16(600, tone_play_fake.arg0_history[0]);
+    TEST_ASSERT_EQUAL_UINT16(150, tone_play_fake.arg1_history[0]);
+    TEST_ASSERT_EQUAL_UINT16(400, tone_play_fake.arg0_history[1]);
+    TEST_ASSERT_EQUAL_UINT16(150, tone_play_fake.arg1_history[1]);
 
     hc_sr04_takeMeasurement_fake.return_val = -50; 
     TEST_ASSERT_EQUAL_UINT8(29,smart_pot_getWaterLevel());
+    TEST_ASSERT_EQUAL_UINT8(1, indicator_off_fake.call_count);
 
     hc_sr04_takeMeasurement_fake.return_val = 50; 
     TEST_ASSERT_EQUAL_UINT8(92,smart_pot_getWaterLevel());
+    TEST_ASSERT_EQUAL_UINT8(2, indicator_off_fake.call_count);
 
     waterTankBottom = -24;
     TEST_ASSERT_EQUAL_UINT8(90,smart_pot_getWaterLevel());
+    TEST_ASSERT_EQUAL_UINT8(3, indicator_off_fake.call_count);
 
     hc_sr04_takeMeasurement_fake.return_val = -50; 
     TEST_ASSERT_EQUAL_UINT8(12,smart_pot_getWaterLevel());
+    TEST_ASSERT_EQUAL_UINT8(2, indicator_on_fake.call_count);
+    TEST_ASSERT_EQUAL_UINT8(4, tone_play_fake.call_count);
 
     // Mock return values for hc_sr04_takeMeasurement
     hc_sr04_takeMeasurement_fake.return_val = 60;  // 60 - 30 = 30
     waterTankBottom = 60;  // limit = 60 - 30 = 30
     TEST_ASSERT_EQUAL_UINT8(0, smart_pot_getWaterLevel());
+    TEST_ASSERT_EQUAL_UINT8(3, indicator_on_fake.call_count);
+    TEST_ASSERT_EQUAL_UINT8(6, tone_play_fake.call_count);
 
     hc_sr04_takeMeasurement_fake.return_val = 40;  // 40 - 30 = 10
     waterTankBottom = 60;  // limit = 60 - 30 = 30
     TEST_ASSERT_EQUAL_UINT8(66, smart_pot_getWaterLevel());
+    TEST_ASSERT_EQUAL_UINT8(4, indicator_off_fake.call_count);
 
     hc_sr04_takeMeasurement_fake.return_val = 20;  // 20 - 30 = -10, should be 0
     waterTankBottom = 60;  // limit = 60 - 30 = 30
     TEST_ASSERT_EQUAL_UINT8(0, smart_pot_getWaterLevel());
+    TEST_ASSERT_EQUAL_UINT8(4, indicator_on_fake.call_count);
+    TEST_ASSERT_EQUAL_UINT8(8, tone_play_fake.call_count);
 
     hc_sr04_takeMeasurement_fake.return_val = 90;  // 90 - 30 = 60
     waterTankBottom = 60;  // limit = 60 - 30 = 30, should be capped to 30
     TEST_ASSERT_EQUAL_UINT8(0, smart_pot_getWaterLevel());
+    TEST_ASSERT_EQUAL_UINT8(5, indicator_on_fake.call_count);
+    TEST_ASSERT_EQUAL_UINT8(10, tone_play_fake.call_count);
 
     hc_sr04_takeMeasurement_fake.return_val = 30;  // 30 - 30 = 0
     waterTankBottom = 60;  // limit = 60 - 30 = 30
     TEST_ASSERT_EQUAL_UINT8(100, smart_pot_getWaterLevel());
+    TEST_ASSERT_EQUAL_UINT8(5, indicator_off_fake.call_count);
 
     // Test edge case where waterTankBottom is less than 30
     hc_sr04_takeMeasurement_fake.return_val = 40;  // 40 - 30 = 10
     waterTankBottom = 20;  // limit = 20 - 30 = -10, should be 0
     TEST_ASSERT_EQUAL_UINT8(95, smart_pot_getWaterLevel());
+    TEST_ASSERT_EQUAL_UINT8(6, indicator_off_fake.call_count);
 }
 
 void test_smart_pot_calibrateWaterTank() {

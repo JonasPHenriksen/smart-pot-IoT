@@ -26,7 +26,7 @@ void test_correct_indicator_driver_initialization() {
 }
 
 
-void test_indicator_driver_run() {
+void test_indicator_driver_on_off() {
 
     indicator_on();
     TEST_ASSERT_TRUE(PORTC & (1 << INDICATOR_OUTPUT_PIN)); // Verify pin is set high
@@ -43,7 +43,7 @@ int main(void)
 
     // Run the tests
     RUN_TEST(test_correct_indicator_driver_initialization);
-    RUN_TEST(test_indicator_driver_run);
+    RUN_TEST(test_indicator_driver_on_off);
 
     // End the tests
     return UNITY_END();
