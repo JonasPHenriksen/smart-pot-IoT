@@ -48,6 +48,8 @@ void cycle() {
 
   const char* values[] = {"777",waterTankLevel, measuredSoilMoisture, amountOfWatering};
   char* jsonString = rawDatasToJSONString(4, keys, values);
+  
+  uint8_t key[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};  
 
   if (aes_toggle == 1) {
     monitor_send("\n");

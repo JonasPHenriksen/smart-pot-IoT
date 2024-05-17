@@ -5,8 +5,6 @@
 
 #define AES_BLOCK_SIZE 16
 
- uint8_t key[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};  
-
 void encrypt_data(const uint8_t* key, uint8_t* data, size_t len) {
     // Calculate padding length
     size_t pad_len = AES_BLOCK_SIZE - (len % AES_BLOCK_SIZE);
