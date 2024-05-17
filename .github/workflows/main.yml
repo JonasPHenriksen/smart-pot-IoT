@@ -67,6 +67,10 @@ jobs:
   publish_executable:
     name: release the exe folder
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
     needs: create_firmware_image
     
     steps:
