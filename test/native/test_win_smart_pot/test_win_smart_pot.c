@@ -284,16 +284,16 @@ void test_smart_pot_playBuzzer() {
   TEST_ASSERT_EQUAL(10, tone_play_fake.call_count);
 }
 
-void test_smart_pot_percentage() {
-    TEST_ASSERT_EQUAL_INT(50, percentage(50, 100));  // 50% of 100 is 50
-    TEST_ASSERT_EQUAL_INT(25, percentage(75, 100));  // 75% of 100 is 75
-    TEST_ASSERT_EQUAL_INT(100, percentage(0, 100));    // 0% of 100 is 0
-    TEST_ASSERT_EQUAL_INT(0, percentage(100, 100));// 100% of 100 is 100
-    TEST_ASSERT_EQUAL_INT(150, percentage(-50, 100));  // -50% of 100 is -50
-    TEST_ASSERT_EQUAL_INT(-2147483648, percentage(1, 0));  // -50% of 100 is -50
-    TEST_ASSERT_EQUAL_INT(100, percentage(0, 1));  // -50% of 100 is -50
-    TEST_ASSERT_EQUAL_INT(86, percentage(-58, -429));  // -50% of 100 is -50
-    TEST_ASSERT_EQUAL_INT(83, percentage(1, 6));    // 0% of 0 is 0
+void test_smart_pot_remainingPercentage() {
+    TEST_ASSERT_EQUAL_INT(50, smart_pot_remainingPercentage(50, 100));  // 50% of 100 is 50
+    TEST_ASSERT_EQUAL_INT(25, smart_pot_remainingPercentage(75, 100));  // 75% of 100 is 75
+    TEST_ASSERT_EQUAL_INT(100, smart_pot_remainingPercentage(0, 100));    // 0% of 100 is 0
+    TEST_ASSERT_EQUAL_INT(0, smart_pot_remainingPercentage(100, 100));// 100% of 100 is 100
+    TEST_ASSERT_EQUAL_INT(150, smart_pot_remainingPercentage(-50, 100));  // -50% of 100 is -50
+    TEST_ASSERT_EQUAL_INT(-2147483648, smart_pot_remainingPercentage(1, 0));  // -50% of 100 is -50
+    TEST_ASSERT_EQUAL_INT(100, smart_pot_remainingPercentage(0, 1));  // -50% of 100 is -50
+    TEST_ASSERT_EQUAL_INT(86, smart_pot_remainingPercentage(-58, -429));  // -50% of 100 is -50
+    TEST_ASSERT_EQUAL_INT(83, smart_pot_remainingPercentage(1, 6));    // 0% of 0 is 0
 }
 
 int main(void)
@@ -308,7 +308,7 @@ int main(void)
     RUN_TEST(test_set_pot_waterAmount);
     RUN_TEST(test_set_pot_moistureLevel);
     RUN_TEST(test_smart_pot_tryWater);
-    RUN_TEST(test_smart_pot_percentage);
+    RUN_TEST(test_smart_pot_remainingPercentage);
     RUN_TEST(test_smart_pot_getWaterLevel);
     RUN_TEST(test_smart_pot_calibrateWaterTank);
 
