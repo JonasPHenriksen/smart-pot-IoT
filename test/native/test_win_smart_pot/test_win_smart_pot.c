@@ -58,49 +58,46 @@ void test_init_methods_are_called() {
 }
 
 void test_init_set_values() {
-    waterAmount = EEPROM_read_uint8_fake.return_val = 50;
-    moistureLevel = EEPROM_read_uint8_fake.return_val = 30;
-    waterTankBottom = EEPROM_read_uint16_fake.return_val = 5301;
-    TEST_ASSERT_EQUAL_UINT8(50,waterAmount);
-    TEST_ASSERT_EQUAL_UINT8(30,moistureLevel);
-    TEST_ASSERT_EQUAL_UINT16(5301,waterTankBottom);
+  waterAmount = EEPROM_read_uint8_fake.return_val = 50;
+  moistureLevel = EEPROM_read_uint8_fake.return_val = 30;
+  waterTankBottom = EEPROM_read_uint16_fake.return_val = 5301;
+  TEST_ASSERT_EQUAL_UINT8(50,waterAmount);
+  TEST_ASSERT_EQUAL_UINT8(30,moistureLevel);
+  TEST_ASSERT_EQUAL_UINT16(5301,waterTankBottom);
 }
 
-void test_set_pot_waterAmount() {
-
-    waterAmount = 0;
-
-    smart_pot_setWaterAmount(37);
-    TEST_ASSERT_EQUAL(37, waterAmount);
-    smart_pot_setWaterAmount(-1);
-    TEST_ASSERT_EQUAL(255, waterAmount);
-    smart_pot_setWaterAmount(256);
-    TEST_ASSERT_EQUAL(0, waterAmount);
-    smart_pot_setWaterAmount(255);
-    TEST_ASSERT_EQUAL(255, waterAmount);
-    TEST_ASSERT_EQUAL(4, EEPROM_write_fake.call_count);
-
+void test_smart_pot_setWaterAmount() {
+  waterAmount = 0;
+  smart_pot_setWaterAmount(37);
+  TEST_ASSERT_EQUAL(37, waterAmount);
+  TEST_ASSERT_EQUAL(1, EEPROM_write_fake.call_count);
+  smart_pot_setWaterAmount(-1);
+  TEST_ASSERT_EQUAL(255, waterAmount);
+  TEST_ASSERT_EQUAL(2, EEPROM_write_fake.call_count);
+  smart_pot_setWaterAmount(256);
+  TEST_ASSERT_EQUAL(0, waterAmount);
+  TEST_ASSERT_EQUAL(3, EEPROM_write_fake.call_count);
+  smart_pot_setWaterAmount(255);
+  TEST_ASSERT_EQUAL(255, waterAmount);
+  TEST_ASSERT_EQUAL(4, EEPROM_write_fake.call_count);
 }
 
-void test_set_pot_moistureLevel() {
-
-    moistureLevel = 0;
-
-    smart_pot_setMoistLevel(37);
-    TEST_ASSERT_EQUAL(37, moistureLevel);
-    TEST_ASSERT_EQUAL(1, EEPROM_write_fake.call_count);
-    smart_pot_setMoistLevel(-1);
-    TEST_ASSERT_EQUAL(255, moistureLevel);
-    TEST_ASSERT_EQUAL(2, EEPROM_write_fake.call_count);
-    smart_pot_setMoistLevel(256);
-    TEST_ASSERT_EQUAL(0, moistureLevel);
-    TEST_ASSERT_EQUAL(3, EEPROM_write_fake.call_count);
-    smart_pot_setMoistLevel(255);
-    TEST_ASSERT_EQUAL(255, moistureLevel);
-    TEST_ASSERT_EQUAL(4, EEPROM_write_fake.call_count);
-
+void test_smart_pot_setMoistureLevel() {
+  moistureLevel = 0;
+  smart_pot_setMoistLevel(37);
+  TEST_ASSERT_EQUAL(37, moistureLevel);
+  TEST_ASSERT_EQUAL(1, EEPROM_write_fake.call_count);
+  smart_pot_setMoistLevel(-1);
+  TEST_ASSERT_EQUAL(255, moistureLevel);
+  TEST_ASSERT_EQUAL(2, EEPROM_write_fake.call_count);
+  smart_pot_setMoistLevel(256);
+  TEST_ASSERT_EQUAL(0, moistureLevel);
+  TEST_ASSERT_EQUAL(3, EEPROM_write_fake.call_count);
+  smart_pot_setMoistLevel(255);
+  TEST_ASSERT_EQUAL(255, moistureLevel);
+  TEST_ASSERT_EQUAL(4, EEPROM_write_fake.call_count);
 }
-void test_set_pot_state() {
+void test_smart_pot_setState() {
   enableState = 0;
   smart_pot_setState(1);
   TEST_ASSERT_EQUAL(1, enableState);
@@ -304,9 +301,9 @@ int main(void)
     // Run the tests
     RUN_TEST(test_init_methods_are_called);
     RUN_TEST(test_init_set_values);
-    RUN_TEST(test_set_pot_state);
-    RUN_TEST(test_set_pot_waterAmount);
-    RUN_TEST(test_set_pot_moistureLevel);
+    RUN_TEST(test_smart_pot_setState);
+    RUN_TEST(test_smart_pot_setWaterAmount);
+    RUN_TEST(test_smart_pot_setMoistureLevel);
     RUN_TEST(test_smart_pot_tryWater);
     RUN_TEST(test_smart_pot_remainingPercentage);
     RUN_TEST(test_smart_pot_getWaterLevel);
