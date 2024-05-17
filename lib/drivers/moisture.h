@@ -1,5 +1,5 @@
 #pragma once
-#include <stdint.h>
+#include "includes.h"
 #define MOISTURE_OUTPUT_PIN PC0
 
 void moisture_init();
