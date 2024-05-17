@@ -308,7 +308,7 @@ int main(void)
     RUN_TEST(test_set_pot_waterAmount);
     RUN_TEST(test_set_pot_moistureLevel);
     RUN_TEST(test_smart_pot_tryWater);
-    RUN_TEST(test_smart_pot_percentage);
+    RUN_TEST(test_smart_pot_remainingPercentage);
     RUN_TEST(test_smart_pot_getWaterLevel);
     RUN_TEST(test_smart_pot_calibrateWaterTank);
 
