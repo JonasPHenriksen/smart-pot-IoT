@@ -86,7 +86,7 @@ uint8_t smart_pot_getWaterLevel() {
   if (waterLevel > limit) {
     waterLevel = limit;
   }
-  waterLevelPercentage = percentage(waterLevel, limit);
+  waterLevelPercentage = smart_pot_remainingPercentage(waterLevel, limit);
 
   if (waterLevelPercentage <= SMARTPOT_LOW_WATER_LEVEL_PERCENTAGE) {
     smart_pot_playBuzzer(SMART_POT_SONG_LOW_WATER_LEVEL);
@@ -110,7 +110,7 @@ void smart_pot_calibrateWaterTank() {
 
 uint8_t smart_pot_getMoisture() {
   uint16_t moisture = moisture_read();
-  return percentage(moisture, 1023);
+  return smart_pot_remainingPercentage(moisture, 1023);
 }
 
 uint64_t smart_pot_getMachineId() {
