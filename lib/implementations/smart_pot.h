@@ -28,7 +28,7 @@ void smart_pot_calibrateWaterTank();
 uint8_t smart_pot_tryWater(uint8_t moisture);
 uint8_t smart_pot_getMoisture();
 uint8_t smart_pot_getWaterLevel();
-int percentage(int value, int ceiling);
+int smart_pot_remainingPercentage(int value, int ceiling);
 
 
 #ifdef WINDOWS_TEST
