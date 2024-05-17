@@ -64,20 +64,16 @@ void smart_pot_setState(uint8_t enable){
 
 
 uint8_t smart_pot_tryWater(uint8_t moisture) {
-  if (enableState != 1) {
-    return 0;
-  }
-
   if (
+    (enableState == 1) &&
     (moisture < moistureLevel) && 
     (waterLevelPercentage > SMARTPOT_MIN_WATERING_WATER_LEVEL_PERCENTAGE)
   ) {
     smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
     pump_run(waterAmount);
     return waterAmount;
-  } else {
-    return 0;
   }
+  return 0;
 }
 
 uint8_t smart_pot_getWaterLevel() {
@@ -123,10 +119,9 @@ uint64_t smart_pot_getMachineId() {
   return (machineGen << 32) | machineId;
 }
 
-int percentage(int value, int ceiling) {
+int smart_pot_remainingPercentage(int value, int ceiling) {
   return (1 - ((float)value / ceiling)) * 100;
 }
-
 
 bool smart_pot_playBuzzer(SMART_POT_SONG_t song) {
   switch (song) {
