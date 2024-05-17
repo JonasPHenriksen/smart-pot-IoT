@@ -5,7 +5,7 @@
 
 #define AES_BLOCK_SIZE 16
 
-uint8_t* encrypt_data(const uint8_t* key, const uint8_t* data, size_t len/*, size_t* out_len*/) {
+uint8_t* encrypt_data(const uint8_t* key, const uint8_t* data, size_t len) {
     // Calculate padding length
     size_t pad_len = AES_BLOCK_SIZE - (len % AES_BLOCK_SIZE);
     size_t total_len = len + pad_len;
@@ -30,17 +30,12 @@ uint8_t* encrypt_data(const uint8_t* key, const uint8_t* data, size_t len/*, siz
         aes128_enc_single(key, (void*)(encrypted_data + i));
     }
 
-    // Set the output length
-    // if (out_len) {
-    //     *out_len = total_len;
-    // }
-
     return encrypted_data;
 }
 
 
 // Function to decrypt a string
-uint8_t* decrypt_data(const uint8_t* key, const uint8_t* data, size_t len/*, size_t* out_len*/) {
+uint8_t* decrypt_data(const uint8_t* key, const uint8_t* data, size_t len) {
     // Allocate buffer for decrypted data
     uint8_t* decrypted_data = (uint8_t*)malloc(len + 1); // +1 for null-terminator
     if (!decrypted_data) {
@@ -73,11 +68,6 @@ uint8_t* decrypt_data(const uint8_t* key, const uint8_t* data, size_t len/*, siz
         decrypted_data[len] = '\0';
         //end_index = len;
     }
-
-    // // Set the output length
-    // if (out_len) {
-    //     *out_len = end_index;
-    // }
 
     return decrypted_data;
 }
