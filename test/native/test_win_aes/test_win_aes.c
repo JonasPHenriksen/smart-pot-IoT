@@ -20,12 +20,12 @@ void tearDown(void) {}
 
 void test_aes_encrypt_encrypt_data_and_decrypt_data() {
     char* TestString = ("Aes Test");
-    char* Original_TestString = ("Aes Test");
+    //char* Original_TestString = ("Aes Test");
     uint8_t key[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};  
-    encrypt_data(key,TestString,strlen(TestString));
-    // decrypt_data(key,TestString,strlen(TestString));
+    uint8_t* encrypted_message = encrypt_data(key,TestString,strlen(TestString));
+    uint8_t* decrypted_message = decrypt_data(key,encrypted_message,strlen(encrypted_message));
 
-    TEST_ASSERT_EQUAL_STRING(Original_TestString, TestString);
+    TEST_ASSERT_EQUAL_STRING(TestString, decrypted_message);
 
     // TEST_ASSERT_EQUAL_CHAR_ARRAY_MESSAGE(Original_TestString, TestString, strlen(Original_TestString));
 

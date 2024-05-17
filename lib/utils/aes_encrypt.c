@@ -5,39 +5,83 @@
 
 #define AES_BLOCK_SIZE 16
 
-void encrypt_data(const uint8_t* key, uint8_t* data, size_t len) {
+uint8_t* encrypt_data(const uint8_t* key, const uint8_t* data, size_t len/*, size_t* out_len*/) {
     // Calculate padding length
     size_t pad_len = AES_BLOCK_SIZE - (len % AES_BLOCK_SIZE);
+    size_t total_len = len + pad_len;
+
+    // Allocate buffer for encrypted data
+    uint8_t* encrypted_data = (uint8_t*)malloc(total_len);
+    if (!encrypted_data) {
+        // Handle allocation failure
+        return NULL;
+    }
+
+    // Copy original data to the encrypted buffer
+    memcpy(encrypted_data, data, len);
+
     // Pad with PKCS#7 padding
     for (size_t i = 0; i < pad_len; ++i) {
-        data[len + i] = pad_len;
+        encrypted_data[len + i] = pad_len;
     }
-    len += pad_len;
+
     // Encrypt in 16-byte blocks
-    for (size_t i = 0; i < len; i += AES_BLOCK_SIZE) {
-        aes128_enc_single(key, (void*)(data + i));
+    for (size_t i = 0; i < total_len; i += AES_BLOCK_SIZE) {
+        aes128_enc_single(key, (void*)(encrypted_data + i));
     }
+
+    // Set the output length
+    // if (out_len) {
+    //     *out_len = total_len;
+    // }
+
+    return encrypted_data;
 }
 
+
 // Function to decrypt a string
-void decrypt_data(const uint8_t* key, uint8_t* data, size_t len) {
+uint8_t* decrypt_data(const uint8_t* key, const uint8_t* data, size_t len/*, size_t* out_len*/) {
+    // Allocate buffer for decrypted data
+    uint8_t* decrypted_data = (uint8_t*)malloc(len + 1); // +1 for null-terminator
+    if (!decrypted_data) {
+        // Handle allocation failure
+        return NULL;
+    }
+
+    // Copy original encrypted data to the decrypted buffer
+    memcpy(decrypted_data, data, len);
+
     // Decrypt in 16-byte blocks
     for (size_t i = 0; i < len; i += AES_BLOCK_SIZE) {
-        aes128_dec_single(key, data + i);
+        aes128_dec_single(key, (void*)(decrypted_data + i));
     }
+
     // Find the index of the first '}' character
     size_t end_index = 0;
     for (size_t i = 0; i < len; i++) {
-        if (data[i] == '}') {
+        if (decrypted_data[i] == '}') {
             end_index = i + 1; // Include the '}' character
             break;
         }
     }
+
     // Null-terminate the decrypted string at the '}' character
     if (end_index < len) {
-        data[end_index] = '\0';
+        decrypted_data[end_index] = '\0';
+    } else {
+        // Ensure the string is null-terminated if no '}' is found
+        decrypted_data[len] = '\0';
+        //end_index = len;
     }
+
+    // // Set the output length
+    // if (out_len) {
+    //     *out_len = end_index;
+    // }
+
+    return decrypted_data;
 }
+
 
 
 
