@@ -223,61 +223,40 @@ extern uint8_t ADCH;
 #define PK1 1
 #define PK0 0
 
-//hc-sr04
-//Vcc
-extern uint8_t DDRC;
-extern uint8_t  PORTC;
-#define  PC0 0
+// PORTC PINS
+#define PC0 0 // Vcc, hc_sr04, Moisture
+#define PC1 1 // Pump
+#define PC2 2 // Trigger
+#define PC3 3 // Indicator
+#define PC4 4 // Echo
+#define PC6 6 // GND
+#define PC7 7
 
-//GND
-extern uint8_t  DDRC; 
-#define  PC6 6
+// PORTK PINS
+#define PK3 3 // PK7, GND
+#define PK4 4 // Signal
+#define PK5 5 // Vcc, pir
 
-//Trigger
-extern uint8_t  DDRC;
-#define  PC2 2
-extern uint8_t  PORTC;
-
-//Echo
-extern uint8_t  PINC;
-#define PC4 4
-
-
-//pir
-//Vcc
-
-extern uint8_t  PORTK;
-#define   PK5 5
-
-//GND
-extern uint8_t  DDRK; //DDRK
-#define  PK3 3 //PK7
-
-//signal
-
-#define  PK4 4
-
-extern uint8_t PINK;
+extern uint8_t CCR2B;
+extern uint8_t CCR2A;
 
 #define PCIE2 2
 #define PCINT20 4
 extern uint8_t PCICR;
 extern uint8_t PCMSK2;
 
-
-//tone 
+// tone 
 #define PA1 1
 extern uint8_t TCCR2A;
 extern uint8_t TCCR2B;
 extern uint8_t TCNT2;
 
-        // Busy-wait
+// Busy-wait
 #define CS22 2
 #define CS21 1
 #define CS20 0
 
 
 #define PE3 3
-#define PC7 7
 #define PA6 6
 #define PA4 4
