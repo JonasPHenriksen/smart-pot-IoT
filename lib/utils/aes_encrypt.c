@@ -43,21 +43,21 @@ void decrypt_data(const uint8_t* key, uint8_t* data, size_t len) {
 
 
 
-void print_hex(const char* label, const uint8_t* data, size_t len) {
-    char buffer[3];
-    monitor_send((char*)label);
-    monitor_send(": ");
-    for (size_t i = 0; i < len; i++) {
-        snprintf(buffer, sizeof(buffer), "%02X ", data[i]);
-        monitor_send(buffer);
-    }
-    monitor_send("\r\n");
-}
+// void print_hex(const char* label, const uint8_t* data, size_t len) {
+//     char buffer[3];
+//     monitor_send((char*)label);
+//     monitor_send(": ");
+//     for (size_t i = 0; i < len; i++) {
+//         snprintf(buffer, sizeof(buffer), "%02X ", data[i]);
+//         monitor_send(buffer);
+//     }
+//     monitor_send("\r\n");
+// }
 
-void hex_to_string(const char* hex, char* output, size_t len) {
-    for (size_t i = 0; i < len; i += 2) {
-        char byte[3] = {hex[i], hex[i + 1], '\0'};
-        output[i / 2] = (char)strtol(byte, NULL, 16);
-    }
-    output[len / 2] = '\0'; // Null-terminate the output string
-}
+// void hex_to_string(const char* hex, char* output, size_t len) {
+//     for (size_t i = 0; i < len; i += 2) {
+//         char byte[3] = {hex[i], hex[i + 1], '\0'};
+//         output[i / 2] = (char)strtol(byte, NULL, 16);
+//     }
+//     output[len / 2] = '\0'; // Null-terminate the output string
+// }
