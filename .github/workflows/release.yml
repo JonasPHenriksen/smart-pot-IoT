@@ -1,4 +1,4 @@
-name: Release exe
+name: Publish Executable
 
 on:
   push:
@@ -6,65 +6,45 @@ on:
       - main
 
 jobs:
-
-  publish_executable:
-    name: release the exe folder
+  publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      repository-projects: write
-    
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Check for changes in executable folder
-        id: check_changes
-        run: |
-          # Create a checksum of the executable folder
-          find executable -type f -exec md5sum {} \; | sort -k 2 | md5sum > current_checksum.md5
-          
-          # Fetch the previous commit and checkout to that state
-          git fetch origin main
-          git checkout FETCH_HEAD~1
-          
-          # Create a checksum of the executable folder in the previous commit
-          find executable -type f -exec md5sum {} \; | sort -k 2 | md5sum > previous_checksum.md5
-          
-          # Compare the checksums
-          if cmp -s current_checksum.md5 previous_checksum.md5; then
-            echo "No changes detected in the executable folder."
-            echo "changes_detected=false" >> $GITHUB_ENV
-          else
-            echo "Changes detected in the executable folder."
-            echo "changes_detected=true" >> $GITHUB_ENV
-          fi
+    - name: Check for changes in the 'executable' folder
+      id: check_changes
+      run: |
+        if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^executable/'; then
+          echo "Changes detected in 'executable' folder."
+          echo "::set-output name=changes::true"
+        else
+          echo "No changes detected in 'executable' folder."
+          echo "::set-output name=changes::false"
+        fi
 
-      - name: Compress executable folder
-        if: env.changes_detected == 'true'
-        run: |
-          zip -r executable_folder.zip executable
+    - name: Create release if changes detected
+      if: steps.check_changes.outputs.changes == 'true'
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.sha }}
+        release_name: Release ${{ github.sha }}
+        body: |
+          Changes in the 'executable' folder detected. Automatic release triggered.
+        draft: false
+        prerelease: false
 
-      - name: Create or update GitHub release
-        if: env.changes_detected == 'true'
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-
-      - name: Upload executable folder to release
-        if: env.changes_detected == 'true'
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./executable_folder.zip
-          asset_name: executable_folder.zip
-          asset_content_type: application/zip
+    - name: Upload 'executable' folder to release
+      if: steps.check_changes.outputs.changes == 'true'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./executable/
+        asset_name: executable-${{ github.sha }}.zip
+        asset_content_type: application/zip
