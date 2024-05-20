@@ -45,22 +45,29 @@ void cycle() {
 
   const char* values[] = {"777",waterTankLevel, measuredSoilMoisture, amountOfWatering};
   char* jsonString = rawDatasToJSONString(4, keys, values);
+  
+  uint8_t key[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};  
 
   if (aesEncryption == true) {
-    encrypt_data(key, (uint8_t*)jsonString, strlen(jsonString));
+    uint8_t encrypted_message = encrypt_data(key, (uint8_t*)jsonString, strlen(jsonString));
     monitor_send(jsonString);
     monitor_send("\n");
 
-    print_hex("Encrypted Hex", (uint8_t*)jsonString, strlen(jsonString));
+    //print_hex("Encrypted Hex", (uint8_t*)jsonString, strlen(jsonString));
     monitor_send("\n");
 
-    decrypt_data(key, (uint8_t*)jsonString, strlen(jsonString));
-    monitor_send(jsonString);
+
+    wifi_command_TCP_transmit(encrypted_message, strlen(encrypted_message));
+
+    uint8_t decrypted_message = decrypt_data(key, (uint8_t*)jsonString, strlen(jsonString));
+    monitor_send(decrypted_message);
     monitor_send("\n");
 
+    free(encrypted_message);
+    free(decrypted_message);
     free(jsonString);
   } else {
-    //wifi_command_TCP_transmit(jsonString, strlen(jsonString));
+    wifi_command_TCP_transmit(jsonString, strlen(jsonString));
     monitor_send(jsonString);
     monitor_send("\n");
     free(jsonString);
@@ -111,9 +118,9 @@ void setup() {
   wifi_init();
 
   smart_pot_init();
-  // wifi_command_join_AP("YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
-  // wifi_command_create_TCP_connection("13.53.174.85", 11000, &callback, messageBuffer);
-  wifi_command_create_TCP_connection("192.168.43.227", 23, &callback, messageBuffer); 
+  wifi_command_join_AP("YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
+  wifi_command_create_TCP_connection("13.53.174.85", 11000, &callback, messageBuffer);
+  // wifi_command_create_TCP_connection("192.168.43.227", 23, &callback, messageBuffer);
 }
 
 void loop() {
