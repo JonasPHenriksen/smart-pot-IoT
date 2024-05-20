@@ -7,7 +7,7 @@ on:
 
 jobs:
           
-  Upload artifact:
+  upload_artifact:
     name: Create firmware image
     runs-on: ubuntu-latest
     
