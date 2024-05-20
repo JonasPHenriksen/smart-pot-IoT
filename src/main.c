@@ -16,15 +16,12 @@
 #include "JsonConvert.h"
 #include "aes_encrypt.h"
 
+unsigned long requestTimeout = 5 * 1000;
 unsigned long previousMillis = 0;
 unsigned long currentMillis = 0;
 unsigned long interval = 3 * 1000;
-unsigned long counter = 0;
-bool aes_toggle = 0;
-
-unsigned long requestTimeout = 5 * 1000;
-uint8_t receivedResponse = false;
-
+bool receivedResponse = false;
+bool aesEncryption = false; 
 
 void cycle() {
   receivedResponse = false;
@@ -51,8 +48,7 @@ void cycle() {
   
   uint8_t key[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};  
 
-  if (aes_toggle == 1) {
-    monitor_send("\n");
+  if (aesEncryption == true) {
     uint8_t encrypted_message = encrypt_data(key, (uint8_t*)jsonString, strlen(jsonString));
     monitor_send(jsonString);
     monitor_send("\n");
@@ -72,9 +68,8 @@ void cycle() {
     free(jsonString);
   } else {
     wifi_command_TCP_transmit(jsonString, strlen(jsonString));
-      // monitor_send("Regular \n");
-      monitor_send(jsonString);
-      // monitor_send("\n");
+    monitor_send(jsonString);
+    monitor_send("\n");
     free(jsonString);
   }
 }
@@ -124,10 +119,8 @@ void setup() {
 
   smart_pot_init();
   wifi_command_join_AP("YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
-   wifi_command_create_TCP_connection("13.53.174.85", 11000, &callback, messageBuffer);
-
-  // wifi_command_create_TCP_connection("192.168.43.221", 23, &callback, messageBuffer); 
-  //wifi_command_create_TCP_connection("192.168.43.227", 23, &callback, messageBuffer); 
+  wifi_command_create_TCP_connection("13.53.174.85", 11000, &callback, messageBuffer);
+  // wifi_command_create_TCP_connection("192.168.43.227", 23, &callback, messageBuffer);
 }
 
 void loop() {
@@ -138,13 +131,6 @@ void loop() {
   if (currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
 
-    counter++;
-    uint8_t digit1 = counter / 1000; // Extract thousands digit
-    uint8_t digit2 = (counter / 100) % 10; // Extract hundreds digit
-    uint8_t digit3 = (counter / 10) % 10; // Extract tens digit
-    uint8_t digit4 = counter % 10; // Extract units digit
-    display_setValues(digit1, digit2, digit3, digit4);
-
     cycle();
 
     // Wait for request response
@@ -153,20 +139,16 @@ void loop() {
     } while (currentMillis - previousMillis < requestTimeout && !receivedResponse);
   }
   
-  if (buttons_1_pressed() && buttons_2_pressed()) {
-    // smart_pot_playBuzzer(SMART_POT_SONG_LOW_WATER_LEVEL);
-    return;
-  }
   if (buttons_1_pressed()) {
     smart_pot_calibrateWaterTank();
   }
   if (buttons_2_pressed()) {
-    aes_toggle = 1;
+    aesEncryption = true;
   }
   if (buttons_3_pressed()) {
-    aes_toggle = 0;
+    aesEncryption = false;
   }
-   if (buttons_2_pressed() && buttons_3_pressed()) {
-     smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
+  if (buttons_2_pressed() && buttons_3_pressed()) {
+    smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
   }
 }
