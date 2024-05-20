@@ -1,18 +1,11 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "includes.h"
 #include <stdbool.h>
 #include <Arduino.h>
-#include <util/delay.h>
 
 #include "buttons.h"
-#include "display.h"
 #include "wifi.h"
 #include "monitor.h"
 #include "smart_pot.h"
-#include "buttons.h"
-#include "display.h"
-#include "EEPROM_prompter.h"
 #include "JsonConvert.h"
 #include "aes_encrypt.h"
 
@@ -112,8 +105,6 @@ void callback() {
 
 void setup() {
   monitor_init(9600);
-
-  display_init();
   buttons_init();
   wifi_init();
 

@@ -1,7 +1,6 @@
 #include "includes.h"
 #include "moisture.h"
 #include <stdint.h>
-#include "display.h"
 
 void moisture_init() {
   // Set 100001 for choosing ADC9
