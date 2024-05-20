@@ -22,6 +22,7 @@ unsigned long currentMillis = 0;
 unsigned long interval = 3 * 1000;
 bool receivedResponse = false;
 bool aesEncryption = false; 
+char messageBuffer[256];
 
 void cycle() {
   receivedResponse = false;
@@ -74,7 +75,6 @@ void cycle() {
   }
 }
 
-char messageBuffer[256];
 void callback() {
   receivedResponse = true;
   cJSON *result = cJSON_Parse(messageBuffer);

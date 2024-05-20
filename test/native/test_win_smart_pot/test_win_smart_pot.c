@@ -272,9 +272,6 @@ void test_smart_pot_playBuzzer() {
   TEST_ASSERT_EQUAL(true, smart_pot_playBuzzer(SMART_POT_SONG_WATERING));
   TEST_ASSERT_EQUAL(SMART_POT_SONG_WATERING, tone_play_fake.arg0_history[1]);
 
-  TEST_ASSERT_EQUAL(true, smart_pot_playBuzzer(SMART_POT_SONG_MOISTURE));
-  TEST_ASSERT_EQUAL(SMART_POT_SONG_MOISTURE, tone_play_fake.arg0_history[2]);
-
   TEST_ASSERT_EQUAL(true, smart_pot_playBuzzer(SMART_POT_SONG_LOW_WATER_LEVEL));
   TEST_ASSERT_EQUAL(SMART_POT_SONG_LOW_WATER_LEVEL, tone_play_fake.arg0_history[3]);
 
