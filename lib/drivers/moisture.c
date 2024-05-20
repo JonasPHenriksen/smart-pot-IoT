@@ -3,8 +3,6 @@
 #include <stdint.h>
 #include "display.h"
 
-// MOISTURE_ANALOG_PIN A9
-
 void moisture_init() {
   // Set 100001 for choosing ADC9
   ADMUX = (1 << REFS0) | (1 << MUX0);
@@ -30,13 +28,13 @@ void moisture_init() {
   on the arduino board
 
   DIDR2
-    ADC9D - Disable something
+    ADC9D - Disable digital input pin
 
   ADCSRA
     ADEN - Enables ADC
 
   */
-  DDRC |= (1 << MOISTURE_OUTPUT_PIN); // Set PC0 as an output
+  DDRC |= (1 << MOISTURE_OUTPUT_PIN); // Set MOISTURE_OUTPUT_PIN as an output
 }
 
 void moisture_on() {
