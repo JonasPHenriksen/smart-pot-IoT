@@ -1,4 +1,4 @@
-name: PlatformIO Test and Release
+name: PlatformIO mock test and Target_run compile
 
 on:
   pull_request:
@@ -45,21 +45,6 @@ jobs:
         run: |
           pip install platformio
       
-      - name: Create firmware image
+      - name: Test target_run compilation
         run: |
           platformio run --environment target_run
-
-      - name: Upload firmware image
-        uses: actions/upload-artifact@v2
-        with:
-          name: firmware
-          path: .pio/build/target_run/firmware.hex
-          
-      - name: Upload test env
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-env
-          path: |
-            lib/
-            test/
-            platformio.ini
