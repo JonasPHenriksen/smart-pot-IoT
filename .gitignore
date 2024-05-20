@@ -1,9 +1,2 @@
-# Include only `firmware.hex` file
-.pio/*
-!.pio/build/
-!.pio/build/target_run/
-.pio/build/*
-.pio/build/target_run/*
-!.pio/build/target_run/firmware.hex
-
+.pio
 **/.vscode/
