@@ -1,18 +1,11 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "includes.h"
 #include <stdbool.h>
 #include <Arduino.h>
-#include <util/delay.h>
 
 #include "buttons.h"
-#include "display.h"
 #include "wifi.h"
 #include "monitor.h"
 #include "smart_pot.h"
-#include "buttons.h"
-#include "display.h"
-#include "EEPROM_prompter.h"
 #include "JsonConvert.h"
 #include "aes_encrypt.h"
 
@@ -22,6 +15,7 @@ unsigned long currentMillis = 0;
 unsigned long interval = 20 * 1000;
 bool receivedResponse = false;
 bool aesEncryption = false; 
+char messageBuffer[256];
 
 void cycle() {
   receivedResponse = false;
@@ -74,7 +68,6 @@ void cycle() {
   }
 }
 
-char messageBuffer[256];
 void callback() {
   receivedResponse = true;
   cJSON *result = cJSON_Parse(messageBuffer);
@@ -113,8 +106,6 @@ void callback() {
 
 void setup() {
   monitor_init(9600);
-
-  display_init();
   buttons_init();
   wifi_init();
 
