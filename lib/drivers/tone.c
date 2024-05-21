@@ -73,7 +73,7 @@ void tone_play(uint16_t frequency, uint16_t duration) {
   
   TCCR2B = 0;
 }
-
+#ifdef WINDOWS_TEST
 void test_tone_player(uint16_t frequency, uint16_t duration) {
   // Calculate the half-period delay in microseconds
   uint16_t delay_us = 500000 / frequency;
@@ -115,7 +115,7 @@ void test_tone_player(uint16_t frequency, uint16_t duration) {
   // Calculate the number of timer ticks needed for the specified delay
   uint8_t num_ticks = (F_CPU / 1000000UL) * delay_us / prescaler_value;
 }
-
+#endif
 
 
 void tone_play_starwars() {

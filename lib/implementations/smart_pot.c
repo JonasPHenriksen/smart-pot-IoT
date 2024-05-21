@@ -11,15 +11,15 @@
 #include "monitor.h"
 #include "EEPROM_prompter.h"
 
-#define SMARTPOT_WATER_AMOUNT_ADDR 2001
-#define SMARTPOT_MOISTURE_LEVEL_ADDR 2002
+#define SMART_POT_WATER_AMOUNT_ADDR 2001
+#define SMART_POT_MOISTURE_LEVEL_ADDR 2002
 
-#define SMARTPOT_WATER_TANK_BOTTOM_ADDR1 2003 //different addresses on purpose
-#define SMARTPOT_WATER_TANK_BOTTOM_ADDR2 2004 //different addresses on purpose
-#define SMARTPOT_ENABLE_STATE_ADDR 2005
+#define SMART_POT_WATER_TANK_BOTTOM_ADDR1 2003 //different addresses on purpose
+#define SMART_POT_WATER_TANK_BOTTOM_ADDR2 2004 //different addresses on purpose
+#define SMART_POT_ENABLE_STATE_ADDR 2005
 
-#define SMARTPOT_MIN_WATERING_WATER_LEVEL_PERCENTAGE 5
-#define SMARTPOT_LOW_WATER_LEVEL_PERCENTAGE 25
+#define SMART_POT_MIN_WATERING_WATER_LEVEL_PERCENTAGE 5
+#define SMART_POT_LOW_WATER_LEVEL_PERCENTAGE 25
 
 
 uint8_t waterAmount;
@@ -39,26 +39,26 @@ void smart_pot_init() {
 
   // if (EEPROM_read(100) == 1)
 
-  waterAmount = EEPROM_read_uint8(SMARTPOT_WATER_AMOUNT_ADDR);
-  moistureLevel = EEPROM_read_uint8(SMARTPOT_MOISTURE_LEVEL_ADDR);
+  waterAmount = EEPROM_read_uint8(SMART_POT_WATER_AMOUNT_ADDR);
+  moistureLevel = EEPROM_read_uint8(SMART_POT_MOISTURE_LEVEL_ADDR);
   waterTankBottom = EEPROM_read_uint16(
-    SMARTPOT_WATER_TANK_BOTTOM_ADDR1,
-    SMARTPOT_WATER_TANK_BOTTOM_ADDR2
+    SMART_POT_WATER_TANK_BOTTOM_ADDR1,
+    SMART_POT_WATER_TANK_BOTTOM_ADDR2
   );
 }
 void smart_pot_setWaterAmount(uint8_t water) {
   waterAmount = water;
-  EEPROM_write(SMARTPOT_WATER_AMOUNT_ADDR, water);
+  EEPROM_write(SMART_POT_WATER_AMOUNT_ADDR, water);
 }
 
 void smart_pot_setMoistLevel(uint8_t moist) {
   moistureLevel = moist;
-  EEPROM_write(SMARTPOT_MOISTURE_LEVEL_ADDR, moist);
+  EEPROM_write(SMART_POT_MOISTURE_LEVEL_ADDR, moist);
 }
 
 void smart_pot_setState(uint8_t enable){
   enable %= 2;
-  EEPROM_write(SMARTPOT_ENABLE_STATE_ADDR, enable); 
+  EEPROM_write(SMART_POT_ENABLE_STATE_ADDR, enable); 
   enableState = enable;
 }
 
@@ -67,7 +67,7 @@ uint8_t smart_pot_tryWater(uint8_t moisture) {
   if (
     (enableState == 1) &&
     (moisture < moistureLevel) && 
-    (waterLevelPercentage > SMARTPOT_MIN_WATERING_WATER_LEVEL_PERCENTAGE)
+    (waterLevelPercentage > SMART_POT_MIN_WATERING_WATER_LEVEL_PERCENTAGE)
   ) {
     smart_pot_playBuzzer(SMART_POT_SONG_WATERING);
     pump_run(waterAmount);
@@ -88,7 +88,7 @@ uint8_t smart_pot_getWaterLevel() {
   }
   waterLevelPercentage = smart_pot_remainingPercentage(waterLevel, limit);
 
-  if (waterLevelPercentage <= SMARTPOT_LOW_WATER_LEVEL_PERCENTAGE) {
+  if (waterLevelPercentage <= SMART_POT_LOW_WATER_LEVEL_PERCENTAGE) {
     smart_pot_playBuzzer(SMART_POT_SONG_LOW_WATER_LEVEL);
     indicator_on();
   } else {
@@ -104,8 +104,8 @@ void smart_pot_calibrateWaterTank() {
   unsigned char byte1 = (waterTankBottom >> 8) & 0xFF; // Extract the first byte
   unsigned char byte2 = waterTankBottom & 0xFF; // Extract the second byte
 
-  EEPROM_write(SMARTPOT_WATER_TANK_BOTTOM_ADDR1, byte1); // Write the first byte to EEPROM
-  EEPROM_write(SMARTPOT_WATER_TANK_BOTTOM_ADDR2, byte2); // Write the second byte to EEPROM
+  EEPROM_write(SMART_POT_WATER_TANK_BOTTOM_ADDR1, byte1); // Write the first byte to EEPROM
+  EEPROM_write(SMART_POT_WATER_TANK_BOTTOM_ADDR2, byte2); // Write the second byte to EEPROM
 }
 
 uint8_t smart_pot_getMoisture() {
@@ -132,11 +132,6 @@ bool smart_pot_playBuzzer(SMART_POT_SONG_t song) {
     case SMART_POT_SONG_WATERING:
       tone_play(650, 150);
       tone_play(800, 150);
-      break;
-    case SMART_POT_SONG_MOISTURE:
-      tone_play(400, 150);
-      tone_play(0, 150);
-      tone_play(400, 150);
       break;
     case SMART_POT_SONG_ERROR:
       tone_play(200, 150);
