@@ -19,7 +19,7 @@
 unsigned long requestTimeout = 5 * 1000;
 unsigned long previousMillis = 0;
 unsigned long currentMillis = 0;
-unsigned long interval = 3 * 1000;
+unsigned long interval = 20 * 1000;
 bool receivedResponse = false;
 bool aesEncryption = false; 
 
@@ -43,7 +43,7 @@ void cycle() {
   sprintf(waterTankLevel, "%d", waterLevel);
   sprintf(measuredSoilMoisture, "%d", moisture);
 
-  const char* values[] = {"777",waterTankLevel, measuredSoilMoisture, amountOfWatering};
+  const char* values[] = {"8000",waterTankLevel, measuredSoilMoisture, amountOfWatering};
   char* jsonString = rawDatasToJSONString(4, keys, values);
   
   uint8_t key[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};  
@@ -83,7 +83,7 @@ void callback() {
   }
 
   cJSON *machine = cJSON_GetObjectItemCaseSensitive(result, "MachineID");
-  if (strcmp(machine->valuestring, "777") != 0) {
+  if (strcmp(machine->valuestring, "8000") != 0) {
     return;
   }
 
@@ -110,6 +110,7 @@ void callback() {
   cJSON_Delete(result);
 }
 
+
 void setup() {
   monitor_init(9600);
 
@@ -130,6 +131,9 @@ void loop() {
   // Check if it's time to run the method
   if (currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
+
+    wifi_command_close_TCP_connection();
+    wifi_command_create_TCP_connection("13.53.174.85", 11000, &callback, messageBuffer);
 
     cycle();
 
