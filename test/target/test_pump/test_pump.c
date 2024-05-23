@@ -1,10 +1,12 @@
-#include "includes.h"
-#include "pump.h"
+#include "tone.h"
+#include "unity.h"
+#include <util/delay.h>
+#include "pir.h"
+
 
 void setUp(void)
 {
     pump_init();
-    pir_init(pir_callback_func);
 }
 void tearDown(void) {}
 
@@ -16,6 +18,7 @@ void pir_callback_func()
 
 void test_pir_if_it_calls_the_callback_function_in_20sec_time_after_activating_pump()
 {
+        pir_init(pir_callback_func);
     _delay_ms(100);
     pump_run(20);
 
