@@ -21,8 +21,8 @@ void cycle() {
   receivedResponse = false;
 
   uint8_t moisture = smart_pot_getMoisture();
-  uint8_t watered = smart_pot_tryWater(moisture);
   uint8_t waterLevel = smart_pot_getWaterLevel();
+  uint8_t watered = smart_pot_tryWater(moisture);
 
   // Send the data to the serial monitor
   char result[128];
