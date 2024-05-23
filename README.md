@@ -20,30 +20,42 @@ Firmware Flasher Tool: Software tool for uploading the firmware to the Arduino M
 # Installation and Setup
 
 ## Hardware Setup
+
+### Connect the Wifi module:
+
+Connect the GND pin to the GND port on the Arduino.
+Connect the VCC pin to the 5V port on the Arduino.
+Connect the TX pin to the TXD2 port on the Arduino. 
+Connect the RX pin to the RXD2 port on the Arduino.
+
+### Connect the buzzer module:
+
+Connect the GND pin to the GND port on the Arduino.
+Connect the VCC pin to the PA7 port on the Arduino.
+
 ### Connect the Soil Moisture Sensor:
 
-Connect the Analog Signal pin to the ADC9/PK1 pin on the Arduino.
-Connect the GND pin to the GND pin on the Arduino.
-Connect the powert to the PC0 on the Arduino.
+Connect the Analog Signal pin to the ADC9/PK1 port on the Arduino.
+Connect the GND pin to the GND port on the Arduino.
+Connect the powert to the PC0 port on the Arduino.
 
 ### Connect the Water Level Sensor (hc_sr04):
 
-Connect the VCC pin to the 5V pin on the Arduino.
-Connect the GND pin to the GND pin on the Arduino.
-Connect the Echo pin to PL6 on the Arduino.
-Connect the Trigger to PL7 on the Arduino.
+Connect the VCC pin to the 5V port on the Arduino.
+Connect the GND pin to the GND port on the Arduino.
+Connect the Echo pin to PL6 port on the Arduino.
+Connect the Trigger to PL7 port the Arduino.
 
 ### Connect the Relay Module for the pump:
 
 Connect the NC port to the Arduino 5V. 
-Connect the VCC and GND pins of the relay module to the 5V and GND pins on the Arduino.
-Connect the control signal pin of the relay module to a digital pin PC1 on the Arduino.
+Connect the VCC and GND pins of the relay module to the 5V and GND ports on the Arduino.
+Connect the control signal pin of the relay module to the digital port PC1 on the Arduino.
 
 
-### Connect the Water Pump via Relay Module:
+### Connect the water pump to the relay module.
 
-Connect the water pump to the relay module.
-Connect GND to GND on the Arduino.
+Connect GND to GND port on the Arduino.
 Connect VCC to the Relay COM port.
 
 
