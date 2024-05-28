@@ -1,0 +1,19 @@
+{
+    "name": "PlatformIO",
+    "build": {
+      "dockerfile": "Dockerfile"
+    },
+    "settings": {
+      "terminal.integrated.shell.linux": "/bin/bash"
+    },
+    "extensions": [
+      "platformio.platformio-ide"
+    ],
+    "postCreateCommand": "platformio update",
+    "remoteUser": "vscode",
+    "workspaceFolder": "/workspace",
+    "mounts": [
+      "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+    ]
+  }
+  
