@@ -1,6 +1,14 @@
-# Smart Pot IoT Project
+# Smart Pot IoT Project - SEP4 VIA
 ## Overview
 The Smart Pot IoT Project is an innovative solution for automating plant care. This project utilizes IoT technology to monitor soil moisture levels and water container status, ensuring that plants receive the optimal amount of water. The system operates in cycles, automatically checking the moisture levels and water container, and watering the plant when needed. The project also includes a firmware flasher for easy deployment to Arduino Mega2560 controllers.
+
+THIS PROJECT IS A PART OF A BACKEND AND FRONTEND SYSTEM. THE PROGRAM DOES NOT WORK BY ITSELF.
+THE ONLY CONTRIBUTERS ALLOWED UNTIL SEPTEMPER, AS IT IS PART OF SCHOOL PROJECT:
+
+JonasPHenriksen - Jonas Henriksen
+AGHowson - Alexander J. G. Howson
+Twaish - Dan V. Nguyen
+SnowyGl - Marc Bang-Jørgensen
 
 ## Features
 Automatic Soil Moisture Monitoring: Continuously checks soil moisture levels to determine the watering needs of the plant.
@@ -64,9 +72,6 @@ Connect VCC to the Relay COM port.
 Obtain the firmware code from the project's release.
 Extract the folder.
 Open the folder and execute the exe file.
-
-## License
-This project is licensed under the MIT License. See the LICENSE file for more details.
 
 ## Contact
 For any questions or support, please open an issue in this repository.
