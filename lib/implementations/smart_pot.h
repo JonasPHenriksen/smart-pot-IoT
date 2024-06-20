@@ -12,6 +12,8 @@
 
 // UTILS
 #include "EEPROM_prompter.h"
+#include "cJSON.h"
+
 typedef enum {
   SMART_POT_SONG_LOW_WATER_LEVEL,
   SMART_POT_SONG_WATERING,
@@ -28,6 +30,7 @@ uint8_t smart_pot_tryWater(uint8_t moisture);
 uint8_t smart_pot_getMoisture();
 uint8_t smart_pot_getWaterLevel();
 int smart_pot_remainingPercentage(int value, int ceiling);
+void smart_pot_updateConfig(cJSON* config);
 
 
 #ifdef WINDOWS_TEST
