@@ -62,6 +62,16 @@ void smart_pot_setState(uint8_t enable){
   enableState = enable;
 }
 
+void smart_pot_updateConfig(cJSON* config) {
+  cJSON* moisture = cJSON_GetObjectItemCaseSensitive(config, "SoilMinimumMoisture");
+  smart_pot_setMoistLevel(moisture->valueint);
+
+  cJSON* waterAmount = cJSON_GetObjectItemCaseSensitive(config, "AmountOfWaterToBeGiven");
+  smart_pot_setWaterAmount(waterAmount->valueint);
+
+  cJSON* enable = cJSON_GetObjectItemCaseSensitive(config, "Enable");
+  smart_pot_setState(enable -> valueint);
+}
 
 uint8_t smart_pot_tryWater(uint8_t moisture) {
   if (
