@@ -5,7 +5,7 @@ The Smart Pot IoT Project is an innovative solution for automating plant care. T
 THIS PROJECT IS A PART OF A BACKEND AND FRONTEND SYSTEM. THE PROGRAM DOES NOT WORK BY ITSELF.
 THE ONLY CONTRIBUTERS ALLOWED UNTIL SEPTEMPER, AS IT IS PART OF A SCHOOL PROJECT:
 
-JonasPHenriksen - Jonas Henriksen 
+JonasPHenriksen - Jonas Henriksen
 
 AGHowson - Alexander J. G. Howson
 
@@ -75,6 +75,21 @@ Connect VCC to the Relay COM port.
 Obtain the firmware code from the project's release.
 Extract the folder.
 Open the folder and execute the exe file.
+
+The flasher calls AVRDUDE to write the firmware, and AVRDUDE is no longer kept in this repository.
+Download the Windows release from [github.com/avrdudes/avrdude/releases](https://github.com/avrdudes/avrdude/releases)
+and put `avrdude.exe` in the same folder as the flasher (next to `avrdude.conf`).
+
+## Third-party code
+
+- `lib/drivers/`: based on the hardware drivers handed out with VIA University College's SEP4 course
+  (several headers name Laurits Ivar as author). That part is course material, not ours.
+- `lib/utils/cJSON*`: [cJSON](https://github.com/DaveGamble/cJSON) by Dave Gamble and cJSON contributors, MIT licence
+  (the notice is in each file).
+- `test/fff.h`: [Fake Function Framework](https://github.com/meekrosoft/fff) by Michael Long, MIT licence.
+- `avrdude.conf`: from [AVRDUDE](https://github.com/avrdudes/avrdude), GPL-2.0-or-later.
+- `executable/smart_pot_flashrunner.exe` is built with PyInstaller and contains Python and PlatformIO, each under its
+  own licence.
 
 ## Contact
 For any questions or support, please open an issue in this repository.

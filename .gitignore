@@ -1,2 +1,4 @@
 .pio
 **/.vscode/
+# AVRDUDE is downloaded separately (see README), not kept in the repository.
+avrdude.exe
